@@ -2,8 +2,10 @@ import express from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
 import authRoutes from './routes/auth.routes.js';
+import errorHandler from './middleware/errorHandler.js';
 
 const app = express();
+
 
 // Middleware
 app.use(cors());
@@ -17,5 +19,6 @@ app.use('/api/auth', authRoutes);
 app.get('/', (req, res) => {
   res.send('Hello, World!');
 });
+app.use(errorHandler)
 
 export default app;

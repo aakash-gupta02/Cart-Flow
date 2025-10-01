@@ -1,129 +1,71 @@
 import User from '../models/user.model.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import catchAsync from '../utils/catchAsync.js';
+import AppError from '../utils/AppError.js';
+import { sendResponse } from '../utils/response.js';
 
-export const login = async (req, res) => {
-  try {
-    // Handle cases where req.body is null/undefined
-    if (!req.body) {
-      return res.status(400).json({
-        success: false,
-        message: 'Email and password are required'
-      });
-    }
+export const register = catchAsync(async (req, res, next) => {
+  const { name, email, password } = req.body;
 
-    const { email, password } = req.body;
-
-    // Validate required fields
-    if (!email || !password) {
-      return res.status(400).json({
-        success: false,
-        message: 'Email and password are required'
-      });
-    }
-
-    // Find user by email (case-insensitive)
-    const user = await User.findOne({ 
-      email: { $regex: new RegExp(`^${email.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`, 'i') } 
-    });
-
-    if (!user) {
-      return res.status(401).json({
-        success: false,
-        message: 'Invalid Email or password'
-      });
-    }
-
-    // Check password
-    const isPasswordValid = bcrypt.compare(password, user.password);
-    if (!isPasswordValid) {
-      return res.status(401).json({
-        success: false,
-        message: 'Invalid email or Password'
-      });
-    }
-
-    const token = jwt.sign(
-      { userId: user._id, role: user.role },
-      process.env.JWT_SECRET,
-      { expiresIn: '7h' }
-    );
-
-    // Remove password and __v from response
-    const userResponse = user.toObject();
-    delete userResponse.password;
-    delete userResponse.__v;
-
-    res.status(200).json({
-      success: true,
-      message: 'Login successful',
-      user: userResponse,
-      token: token
-    });
-
-  } catch (error) {
-    console.error('Login error:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Internal server error'
-    });
+  // Check if user already exists 
+  const existingUser = await User.findOne({ email })
+  if (existingUser) {
+    return next(new AppError("Email already in use", 400));
   }
-};
 
-export const register = async (req, res) => {
-  try {
-    const { name, email, password, role, address } = req.body;
+  // password hashing
+  const salt = await bcrypt.genSalt(10)
+  const hashedPassword = await bcrypt.hash(password, salt)
 
-    // Validate required fields
-    if (!name || !email || !password) {
-      return res.status(400).json({
-        success: false,
-        message: 'Name, email, and password are required'
-      });
-    }
+  // create & save user
+  const newUser = new User({
+    name,
+    email,
+    password: hashedPassword
+  })
+  await newUser.save();
 
-    // Check if user already exists (case-insensitive)
-    const existingUser = await User.findOne({ 
-      email: { $regex: new RegExp(`^${email.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`, 'i') } 
-    });
-    if (existingUser) {
-      return res.status(409).json({
-        success: false,
-        message: 'User already exists with this email'
-      });
-    }
+  // Remove password and __v from response
+  const userResponse = newUser.toObject();
+  delete userResponse.password;
+  delete userResponse.__v;
 
-    // Hash the password
-    const saltRounds = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, saltRounds);
+  sendResponse(res, 201, 'User Registered Successfully',{user: userResponse} )
 
-    // Create new user
-    const newUser = new User({
-      name,
-      email,
-      password: hashedPassword,
-      // role: role || 'user',
-      address
-    });
 
-    await newUser.save();
+})
 
-    // Remove password and __v from response
-    const userResponse = newUser.toObject();
-    delete userResponse.password;
-    delete userResponse.__v;
+export const login = catchAsync(async (req, res, next) => {
+  const { email, password } = req.body;
 
-    res.status(201).json({
-      success: true,
-      message: 'User registered successfully',
-      user: userResponse
-    });
-
-  } catch (error) {
-    console.error('Registration error:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Internal server error'
-    });
+  // checking if user exist or not
+  const userExists = await User.findOne({ email })
+  if (!userExists) {
+    return next(new AppError("Invalid Email or Password", 400))
   }
-};
+
+  // checking if password is correct
+  const isPasswordValid = await bcrypt.compare(password, userExists.password)
+  if (!isPasswordValid) {
+    return next(new AppError("Invalid email or Password", 400))
+  }
+
+  // token genration
+  const token = jwt.sign(
+    { userid: userExists._id, role: userExists.role },
+    process.env.JWT_SECRET,
+    { expiresIn: "7h" }
+  )
+
+  // Remove password and __v from response
+  const userResponse = userExists.toObject()  
+  delete userResponse.password
+  delete userResponse.__v
+
+  sendResponse(res, 200,'Login Successful', {
+    user: userResponse,
+    token: token
+  })
+
+})
