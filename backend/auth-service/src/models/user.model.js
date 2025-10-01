@@ -23,9 +23,7 @@ const userSchema = new mongoose.Schema({
         enum: ['user', 'seller', 'admin'],
         default: 'user'
     },
-    address: {
-        addressSchema
-    }
+    address: addressSchema
 },
 
     { timestamps: true }
