@@ -3,6 +3,7 @@ import cors from 'cors';
 import morgan from 'morgan';
 import authRoutes from './routes/auth.routes.js';
 import errorHandler from './middleware/errorHandler.js';
+import { protect } from './middleware/auth.middleware.js';
 
 const app = express();
 
@@ -16,8 +17,8 @@ app.use(express.urlencoded({ extended: true }));
 // Routes
 app.use('/api/auth', authRoutes);
 
-app.get('/', (req, res) => {
-  res.send('Hello, World!');
+app.get('/',protect, (req, res) => {
+  res.send(req.user);
 });
 app.use(errorHandler)
 

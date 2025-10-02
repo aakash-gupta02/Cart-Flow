@@ -4,12 +4,15 @@ import jwt from 'jsonwebtoken';
 import catchAsync from '../utils/catchAsync.js';
 import AppError from '../utils/AppError.js';
 import { sendResponse } from '../utils/response.js';
+import { config } from '../config/config.js';
 
 export const register = catchAsync(async (req, res, next) => {
   const { name, email, password } = req.body;
 
-  // Check if user already exists 
-  const existingUser = await User.findOne({ email })
+  // Check if user already exists (case-insensitive)
+  const existingUser = await User.findOne({ 
+    email: { $regex: new RegExp(`^${email.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`, 'i') }
+  })
   if (existingUser) {
     return next(new AppError("Email already in use", 400));
   }
@@ -31,7 +34,7 @@ export const register = catchAsync(async (req, res, next) => {
   delete userResponse.password;
   delete userResponse.__v;
 
-  sendResponse(res, 201, 'User Registered Successfully',{user: userResponse} )
+  sendResponse(res, 201, 'User Registered Successfully', { user: userResponse })
 
 
 })
@@ -39,8 +42,10 @@ export const register = catchAsync(async (req, res, next) => {
 export const login = catchAsync(async (req, res, next) => {
   const { email, password } = req.body;
 
-  // checking if user exist or not
-  const userExists = await User.findOne({ email })
+  // checking if user exist or not (case-insensitive)
+  const userExists = await User.findOne({ 
+    email: { $regex: new RegExp(`^${email.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`, 'i') }
+  })
   if (!userExists) {
     return next(new AppError("Invalid Email or Password", 400))
   }
@@ -53,17 +58,15 @@ export const login = catchAsync(async (req, res, next) => {
 
   // token genration
   const token = jwt.sign(
-    { userid: userExists._id, role: userExists.role },
-    process.env.JWT_SECRET,
-    { expiresIn: "7h" }
+    { userid: userExists._id, role: userExists.role }, config.jwtSecret, { expiresIn: "7h" }
   )
 
   // Remove password and __v from response
-  const userResponse = userExists.toObject()  
+  const userResponse = userExists.toObject()
   delete userResponse.password
   delete userResponse.__v
 
-  sendResponse(res, 200,'Login Successful', {
+  sendResponse(res, 200, 'Login Successful', {
     user: userResponse,
     token: token
   })

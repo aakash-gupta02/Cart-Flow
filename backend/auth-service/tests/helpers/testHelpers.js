@@ -33,14 +33,6 @@ export const generateValidUserData = (overrides = {}) => {
     name: 'John Doe',
     email: `test-${Date.now()}@example.com`,
     password: 'password123',
-    role: 'user',
-    address: {
-      street: '123 Test St',
-      city: 'Test City',
-      state: 'TS',
-      zip: '12345',
-      country: 'Test Country'
-    },
     ...overrides
   };
 };
