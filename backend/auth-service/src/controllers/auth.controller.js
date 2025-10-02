@@ -1,10 +1,11 @@
 import User from '../models/user.model.js';
 import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
 import catchAsync from '../utils/catchAsync.js';
 import AppError from '../utils/AppError.js';
 import { sendResponse } from '../utils/response.js';
 import { config } from '../config/config.js';
+import { generateAccessToken, generateRefreshToken } from '../utils/token.js';
+import jwt from 'jsonwebtoken';
 
 export const register = catchAsync(async (req, res, next) => {
   const { name, email, password } = req.body;
@@ -56,19 +57,54 @@ export const login = catchAsync(async (req, res, next) => {
     return next(new AppError("Invalid email or Password", 400))
   }
 
-  // token genration
-  const token = jwt.sign(
-    { userid: userExists._id, role: userExists.role }, config.jwtSecret, { expiresIn: "7h" }
-  )
+  let accessToken = generateAccessToken(userExists)
+  let refreshToken = generateRefreshToken(userExists)
+
+  // Store refresh token in DB
+  let hashedRefreshToken = await bcrypt.hash(refreshToken, 10)
+  userExists.refreshToken = hashedRefreshToken
+  await userExists.save()
+
+  res.cookie('refreshToken', refreshToken, {
+    httpOnly: true,
+    secure: config.nodeEnv === 'production',
+    sameSite: 'strict',
+    maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+  });
 
   // Remove password and __v from response
   const userResponse = userExists.toObject()
   delete userResponse.password
   delete userResponse.__v
+  delete userResponse.refreshToken
 
   sendResponse(res, 200, 'Login Successful', {
     user: userResponse,
-    token: token
+    accessToken: accessToken,
+    refreshTokenSent: refreshToken ? true : false // just to inform client that refresh token is sent in httpOnly cookie
   })
 
 })
+
+export const refreshToken = catchAsync(async (req, res, next) => {
+  const { refreshToken } = req.cookies;
+  if (!refreshToken) {
+    return next(new AppError("Refresh token required", 401));
+  }
+
+  jwt.verify(refreshToken, config.jwtSecret , async (err, decoded) => {
+    if (err) return next(new AppError("Invalid or expired refresh token", 403));
+
+
+    const user = await User.findById(decoded.userid);
+    if (!user) return next(new AppError("User not found", 404));
+
+    // Issue new access token
+    const newAccessToken = generateAccessToken(user);
+
+    res.status(200).json({
+      success: true,
+      accessToken: newAccessToken,
+    });
+  });
+});

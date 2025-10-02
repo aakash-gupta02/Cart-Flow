@@ -4,6 +4,8 @@ import morgan from 'morgan';
 import authRoutes from './routes/auth.routes.js';
 import errorHandler from './middleware/errorHandler.js';
 import { protect } from './middleware/auth.middleware.js';
+import cookieParser from 'cookie-parser';
+import { rateLimiter } from './middleware/rateLimit.middleware.js';
 
 const app = express();
 
@@ -13,11 +15,13 @@ app.use(cors());
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
+
 
 // Routes
 app.use('/api/auth', authRoutes);
 
-app.get('/',protect, (req, res) => {
+app.get('/',protect, rateLimiter(20), (req, res) => {
   res.send(req.user);
 });
 app.use(errorHandler)

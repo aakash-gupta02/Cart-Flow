@@ -23,7 +23,10 @@ const userSchema = new mongoose.Schema({
         enum: ['user', 'seller', 'admin'],
         default: 'user'
     },
-    address: addressSchema
+    address: addressSchema,
+    refreshToken:{
+        type:String
+    }
 },
 
     { timestamps: true }
