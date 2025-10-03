@@ -108,3 +108,42 @@ export const refreshToken = catchAsync(async (req, res, next) => {
     });
   });
 });
+
+export const logout = catchAsync(async (req, res, next) => {
+  const { refreshToken } = req.cookies;
+  if (!refreshToken) {
+    return next(new AppError("Refresh token required", 401));
+  }
+
+  jwt.verify(refreshToken, config.jwtSecret , async (err, decoded) => {
+    if (err) return next(new AppError("Invalid or expired refresh token", 403));
+
+    const user = await User.findById(decoded.userid);
+    if (!user) return next(new AppError("User not found", 404));
+
+    // Remove refresh token from DB
+    user.refreshToken = null;
+    await user.save();
+
+    // Clear cookie
+    res.clearCookie('refreshToken', {
+      httpOnly: true,
+      secure: config.nodeEnv === 'production',
+      sameSite: 'strict',
+    });
+
+    res.status(200).json({
+      success: true,
+      message: "Logged out successfully"
+    });
+  });
+});
+
+export const getProfile = catchAsync(async (req, res, next) => {
+  const user = await User.findById(req.user.userid).select('-password -__v -refreshToken');
+  if (!user) {
+    return next(new AppError("User not found", 404));
+  }
+
+  sendResponse(res, 200, 'User Profile fetched successfully', { user });
+});
