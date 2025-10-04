@@ -4,12 +4,11 @@ import morgan from 'morgan';
 import errorHandler from './middleware/errorHandler.js';
 import cookieParser from 'cookie-parser';
 import { mediaUpload, uploadToCloudinary } from './middleware/multer.middleware.js';
-import { protect } from './middleware/auth.middleware.js';
+import { accessTo, protect } from './middleware/auth.middleware.js';
 
-
+import productRoutes from "./routes/product.routes.js"
 
 const app = express();
-
 
 // Middleware
 app.use(cors());
@@ -45,9 +44,11 @@ app.post("/upload/test-upload", mediaUpload, async (req, res) => {
   }
 });
 
-app.get("/protect-test",protect, (req, res)=>{
+app.get("/protect-test",protect, accessTo("user","seller"), (req, res)=>{
   res.send(req.user)
 })
+
+app.use("/api/product",productRoutes)
 
 app.use(errorHandler)
 

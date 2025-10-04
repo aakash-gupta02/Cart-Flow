@@ -36,9 +36,9 @@ export const protect = catchAsync(async (req, res, next) => {
 
 export const accessTo = (...roles) => {
     return (req, res, next) => {
-        if (!roles.includes(req.user.role)) {
-            return next(new AppError("You do not have permission", 403))
+        if (!req.user || !roles.some(role => req.user.role === role)) {
+            return next(new AppError("You do not have permission", 403));
         }
-        next()
-    }
+        next();
+    };
 }

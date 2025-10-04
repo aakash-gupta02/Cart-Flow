@@ -7,7 +7,7 @@ export const generateAccessToken = (user) => {
         role: user.role
     },
         config.jwtSecret,
-        { expiresIn: "20m" }
+        { expiresIn: "1h" }
     )
 }
 

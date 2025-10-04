@@ -8,7 +8,7 @@ import { generateAccessToken, generateRefreshToken } from '../utils/token.js';
 import jwt from 'jsonwebtoken';
 
 export const register = catchAsync(async (req, res, next) => {
-  const { name, email, password } = req.body;
+  const { name, email, password, role } = req.body;
 
   // Check if user already exists (case-insensitive)
   const existingUser = await User.findOne({ 
@@ -26,7 +26,8 @@ export const register = catchAsync(async (req, res, next) => {
   const newUser = new User({
     name,
     email,
-    password: hashedPassword
+    password: hashedPassword,
+    role
   })
   await newUser.save();
 
