@@ -116,11 +116,8 @@ export const deleteProduct = catchAsync(async (req, res, next) => {
 
 export const getProductsBySeller = catchAsync(async (req, res, next) => {
     const sellerId = req.user.userid;
-    console.log(sellerId);
     
-
     const products = await Product.find({ seller: sellerId });
-    console.log(products);
     
 
     sendResponse(res, 200, "Products fetched successfully", { products });
