@@ -72,6 +72,12 @@ export const login = catchAsync(async (req, res, next) => {
     sameSite: 'strict',
     maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
   });
+  res.cookie('accessToken', accessToken, {
+    httpOnly: true,
+    secure: config.nodeEnv === 'production',
+    sameSite: 'strict',
+    maxAge: 60 * 60 * 1000 // 1 hour
+  });
 
   // Remove password and __v from response
   const userResponse = userExists.toObject()
@@ -81,7 +87,7 @@ export const login = catchAsync(async (req, res, next) => {
 
   sendResponse(res, 200, 'Login Successful', {
     user: userResponse,
-    accessToken: accessToken,
+    accessToken: accessToken ? true : false, // just to inform client that access token is sent in httpOnly cookie
     refreshTokenSent: refreshToken ? true : false // just to inform client that refresh token is sent in httpOnly cookie
   })
 
