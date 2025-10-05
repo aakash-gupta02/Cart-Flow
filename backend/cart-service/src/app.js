@@ -3,6 +3,7 @@ import cors from 'cors';
 import morgan from 'morgan';
 import errorHandler from './middleware/errorHandler.js';
 import cookieParser from 'cookie-parser';
+import cartRoutes from './routes/cart.route.js';
 
 const app = express();
 
@@ -18,6 +19,7 @@ app.use(cookieParser());
 app.get("/", (req, res) => {
   res.send("Hello from Cart Service");
 });
+app.use("/api/cart", cartRoutes);
 
 app.use(errorHandler)
 
