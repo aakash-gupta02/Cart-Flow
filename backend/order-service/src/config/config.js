@@ -6,4 +6,10 @@ export const config = {
     mongoURL: process.env.MONGO_URL,
     port: process.env.PORT || 3003,
     nodeEnv: process.env.NODE_ENV || "development",
+
+    // api urls
+    cartServiceURL: process.env.CART_SERVICE_URL || "http://localhost:3002",
+    productServiceURL: process.env.PRODUCT_SERVICE_URL || "http://localhost:3001"
+
+    
 }   

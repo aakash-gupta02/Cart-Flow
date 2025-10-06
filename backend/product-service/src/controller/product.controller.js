@@ -122,3 +122,27 @@ export const getProductsBySeller = catchAsync(async (req, res, next) => {
 
     sendResponse(res, 200, "Products fetched successfully", { products });
 });
+
+export const decreaseProductStock = catchAsync(async (req, res, next) => {
+    const { productId, quantity } = req.body;
+    console.log(`productId: ${productId}, quantity: ${quantity}`);
+    
+
+    if (!productId || !quantity) {
+        return next(new AppError("Product ID and quantity are required", 400));
+    }
+
+    const product = await Product.findById(productId);
+    if (!product) {
+        return next(new AppError("Product not found", 404));
+    }
+
+    if (product.stock < quantity) {
+        return next(new AppError("Insufficient stock", 400));
+    }
+
+    product.stock -= quantity;
+    await product.save();
+
+    sendResponse(res, 200, "Product stock decreased successfully", { product });
+});

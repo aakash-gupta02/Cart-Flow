@@ -3,7 +3,7 @@ import cors from 'cors';
 import morgan from 'morgan';
 import errorHandler from './middleware/errorHandler.js';
 import cookieParser from 'cookie-parser';
-import cartRoutes from './routes/cart.route.js';
+import orderRoutes from './routes/order.route.js';
 
 const app = express();
 
@@ -17,9 +17,9 @@ app.use(cookieParser());
 
 // Routes
 app.get("/", (req, res) => {
-  res.send("Hello from Cart Service");
+  res.send("Hello from Order Service");
 });
-app.use("/api/cart", cartRoutes);
+app.use("/api/order", orderRoutes);
 
 app.use(errorHandler)
 

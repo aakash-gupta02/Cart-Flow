@@ -61,3 +61,16 @@ export const productUpdateSchema = Joi.object({
     })
 });
 
+export const decreasedStockSchema = Joi.object({
+    productId: Joi.string().length(24).hex().required().messages({
+        "string.base": "Product ID must be a string.",
+        "string.length": "Product ID must be 24 characters long.",
+        "string.hex": "Product ID must be a valid hexadecimal string.",
+        "any.required": "Product ID is required."
+    }),
+    quantity: Joi.number().min(1).required().messages({
+        "number.base": "Quantity must be a number.",
+        "number.min": "Quantity must be at least 1.",
+        "any.required": "Quantity is required."
+    })
+});
