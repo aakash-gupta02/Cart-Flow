@@ -1,6 +1,6 @@
 import express from "express";
 import { accessTo, protect } from "../middleware/auth.middleware.js";
-import { addProduct, decreaseProductStock, deleteProduct, getAllProducts, getProductById, getProductsBySeller, updateProduct } from "../controller/product.controller.js";
+import { addProduct, decreaseProductStock, deleteProduct, getAllProducts, getProductById, getProductsBySeller, increaseProductStock, updateProduct } from "../controller/product.controller.js";
 import { mediaUpload } from "../middleware/multer.middleware.js";
 import validate from "../middleware/validate.js";
 import { decreasedStockSchema, productSchema, productUpdateSchema } from "../validators/product.validator.js";
@@ -12,6 +12,7 @@ router.get('/:id', getProductById)
 router.use(protect)
 
 router.post('/decrease-stock',validate(decreasedStockSchema), decreaseProductStock)
+router.post('/increase-stock',validate(decreasedStockSchema), increaseProductStock)
 
 
 router.use(accessTo("seller", "admin"))

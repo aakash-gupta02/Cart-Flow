@@ -28,6 +28,20 @@ export const ProductService = {
         );
         return data?.data?.product || null;
     },
+    async increaseStock(productId, accessToken, quantity) {
+        const data = await axios.post(
+            `${config.productServiceURL}/api/product/increase-stock`, {
+            quantity, productId
+        },
+            {
+                headers: {
+                    Cookie: `accessToken=${accessToken}`,
+                },
+                withCredentials: true,
+            }
+        );
+        return data?.data?.product || null;
+    },
 };
 
 export const CartService = {

@@ -41,3 +41,4 @@ export const addressUpdateValidator = joi.object({
     }),
     isDefault: joi.boolean().optional()
 });
+

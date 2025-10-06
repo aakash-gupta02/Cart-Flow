@@ -82,10 +82,48 @@ export const getOrders = catchAsync(async (req, res, next) => {
 
 export const getOrderById = catchAsync(async (req, res, next) => {
     const userId = req.user.userid;
-    const orderId = req.params.id;
+    const { orderId } = req.params;
 
     const order = await Order.findOne({ _id: orderId, user: userId }).populate("items.product");
     if (!order) return next(new AppError("Order not found", 404));
 
     sendResponse(res, 200, "Order fetched successfully", { order });
 });
+
+export const updateAddress = catchAsync(async (req, res, next) => {
+    const userId = req.user.userid;
+    const { orderId } = req.params;
+    const { street, city, state, zip, country } = req.body;
+
+    const order = await Order.findOne({ _id: orderId, user: userId });
+    if (!order) return next(new AppError("Order not found", 404));
+
+    if (order.status !== "pending") return next(new AppError("Only pending orders can update address", 400));
+
+    order.shippingAddress = { street, city, state, zip, country };
+    await order.save();
+    sendResponse(res, 200, "Order address updated successfully", { order });
+})
+
+export const cancelOrder = catchAsync(async (req, res, next) => {
+    const userId = req.user.userid;
+    const { orderId } = req.params;
+
+    const order = await Order.findOne({ _id: orderId, user: userId });
+    if (!order) return next(new AppError("Order not found", 404));
+
+    if (order.status !== "pending") {
+        return next(new AppError(`Cannot Cancel Order when its ${order.status}`, 400));
+    }
+
+    await Promise.all(
+        order.items.map(item =>
+            ProductService.increaseStock(item.product, req.cookies.accessToken, item.quantity)
+        )
+    )
+
+    order.status = "cancelled";
+    await order.save();
+    sendResponse(res, 200, "Order Cancelled successfully", { order });
+})
+
