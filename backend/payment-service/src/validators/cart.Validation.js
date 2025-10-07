@@ -18,8 +18,9 @@ export const updateCartSchema = Joi.object({
         "any.required": "Quantity is required"
     })
 });
-export const removeCartSchema = Joi.object({
-    itemId: Joi.string().regex(/^[0-9a-fA-F]{24}$/).required().messages({
+
+export const createPaymentSchema = Joi.object({
+    orderId: Joi.string().regex(/^[0-9a-fA-F]{24}$/).required().messages({
         "string.pattern.base": "Invalid Item ID format",
         "any.required": "Item ID is required"
     }),

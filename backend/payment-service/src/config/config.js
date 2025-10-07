@@ -6,4 +6,11 @@ export const config = {
     mongoURL: process.env.MONGO_URL,
     port: process.env.PORT || 3002,
     nodeEnv: process.env.NODE_ENV || "development",
+
+    orderServiceURL: process.env.ORDER_SERVICE_URL || "http://localhost:3003",
+
+    clientURL: process.env.CLIENT_URL || "http://localhost:5173",
+    
+    razorPayKeyId: process.env.RAZORPAY_KEY_ID,
+    razorPayKeySecret: process.env.RAZORPAY_KEY_SECRET,
 }   

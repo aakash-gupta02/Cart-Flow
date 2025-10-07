@@ -127,3 +127,32 @@ export const cancelOrder = catchAsync(async (req, res, next) => {
     sendResponse(res, 200, "Order Cancelled successfully", { order });
 })
 
+export const updatePaymentStatus = catchAsync(async (req, res, next) => {
+    const { orderId } = req.params;
+    const { status } = req.body;
+        
+    // find order by id
+    const order = await Order.findById(orderId);
+    if (!order) return next(new AppError("Order not found", 404));
+
+    // update status
+    order.paymentStatus = status;
+    await order.save();
+    sendResponse(res, 200, "Order status updated successfully", { order });
+});
+
+export const updateStatus = catchAsync(async (req, res, next) => {
+    const { orderId } = req.params;
+    const { status } = req.body;    
+
+    // find order by id
+    const order = await Order.findById(orderId);
+    if (!order) return next(new AppError("Order not found", 404));
+
+    // update status
+    order.status = status;
+    await order.save();
+    sendResponse(res, 200, "Order status updated successfully", { order });
+});
+
+

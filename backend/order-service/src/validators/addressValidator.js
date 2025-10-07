@@ -23,6 +23,13 @@ export const addressValidator = joi.object({
     }),
 });
 
+export const statusUpdateValidator = joi.object({
+    status: joi.string().valid("pending", "confirmed", "shipped", "delivered", "cancelled").required().messages({
+        "any.only": "Status must be one of 'pending', 'shipped', 'delivered', 'cancelled'",
+        "string.empty": "Status is required",
+    }),
+});
+
 export const addressUpdateValidator = joi.object({
     street: joi.string().max(100).messages({
         "string.max": "Street must be less than 100 characters",

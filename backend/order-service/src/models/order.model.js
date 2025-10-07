@@ -13,7 +13,7 @@ const orderSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         required: true
     },
-    
+
     items: [{
         product: {
             type: mongoose.Schema.Types.ObjectId,
@@ -54,6 +54,13 @@ const orderSchema = new mongoose.Schema({
         enum: ["pending", "confirmed", "shipped", "delivered", "cancelled"],
         default: "pending"
     },
+
+    paymentStatus: {
+        type: String,
+        enum: ["pending", "paid", "failed", "refunded"],
+        default: "pending"
+    },
+
 
     shippingAddress: addressSchema,
 },

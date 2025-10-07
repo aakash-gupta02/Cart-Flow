@@ -5,16 +5,11 @@ const paymentSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         required: true
     },
-    paymentid: {
-        type: String
-    },
-    razorpayorderid: {
+    razorPayOrderid: {
         type: String,
         required: true
     },
-    signature: {
-        type: String
-    },
+
     status: {
         type: String,
         enum: ['pending', 'completed', 'failed'],
@@ -33,9 +28,16 @@ const paymentSchema = new mongoose.Schema({
             type: String,
             required: true,
             default: 'INR',
-            enum: ['INR', "USD"]
+            enum: ['INR', "USD", "EUR"]
         }
-    }
+    },
+
+    paymentid: {
+        type: String
+    },
+    signature: {
+        type: String
+    },
 }, { timestamps: true });
 
 
