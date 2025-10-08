@@ -1,7 +1,9 @@
 import jwt from "jsonwebtoken";
 import { Server } from "socket.io";
-import AppError from "../utils/AppError.js"; 
+import AppError from "../utils/AppError.js";
 import { config } from "../config/config.js";
+import { agent } from "../agent/agents/product-agent.js";
+import { HumanMessage } from "@langchain/core/messages";
 
 export default function createSocketServer(server) {
     const io = new Server(server, {
@@ -44,6 +46,18 @@ export default function createSocketServer(server) {
         socket.on("disconnect", () => {
             console.log(`❌ User disconnected: ${socket.user.userid}`);
         });
+
+        socket.on('message', async (msg) => {
+
+            const initialState = { messages: [new HumanMessage(msg)] };
+            const agentResponse = await agent.invoke(initialState)
+
+            socket.emit('message', agentResponse.response);
+            console.log("Agent Response:", agentResponse);
+            
+        });
+
+
     });
 
     return io;
