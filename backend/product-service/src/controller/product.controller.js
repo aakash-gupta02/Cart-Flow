@@ -44,7 +44,22 @@ export const addProduct = catchAsync(async (req, res, next) => {
 
 // Get all products
 export const getAllProducts = catchAsync(async (req, res, next) => {
-    const products = await Product.find();
+
+    const { q } = req.query;
+
+    // If query param exists, use regex search
+    const filter = q
+        ? {
+            $or: [
+                { name: { $regex: q, $options: "i" } },
+                { description: { $regex: q, $options: "i" } },
+                { brand: { $regex: q, $options: "i" } },
+                { category: { $regex: q, $options: "i" } },
+            ],
+        }
+        : {};
+
+    const products = await Product.find(filter);
     sendResponse(res, 200, "Products fetched successfully", { products });
 });
 
@@ -116,9 +131,9 @@ export const deleteProduct = catchAsync(async (req, res, next) => {
 
 export const getProductsBySeller = catchAsync(async (req, res, next) => {
     const sellerId = req.user.userid;
-    
+
     const products = await Product.find({ seller: sellerId });
-    
+
 
     sendResponse(res, 200, "Products fetched successfully", { products });
 });
@@ -126,7 +141,7 @@ export const getProductsBySeller = catchAsync(async (req, res, next) => {
 export const decreaseProductStock = catchAsync(async (req, res, next) => {
     const { productId, quantity } = req.body;
     console.log(`productId: ${productId}, quantity: ${quantity}`);
-    
+
 
     if (!productId || !quantity) {
         return next(new AppError("Product ID and quantity are required", 400));
@@ -148,7 +163,7 @@ export const decreaseProductStock = catchAsync(async (req, res, next) => {
 });
 
 export const increaseProductStock = catchAsync(async (req, res, next) => {
-    const { productId, quantity } = req.body;    
+    const { productId, quantity } = req.body;
 
     if (!productId || !quantity) {
         return next(new AppError("Product ID and quantity are required", 400));
