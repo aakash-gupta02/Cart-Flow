@@ -17,7 +17,4 @@ await client.connect();
 
 export default client;
 
-await client.set('foo', 'bar');
-const result = await client.get('foo');
-console.log(result)  // >>> bar
 

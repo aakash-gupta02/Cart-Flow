@@ -1,11 +1,20 @@
+import { redisCache } from "../utils/cache.js";
 import catchAsync from "../utils/catchAsync.js";
 import { orderService, paymentService, ProductService } from "../utils/externalServices.js";
 import { sendResponse } from "../utils/response.js";
 
 const sellerService = async (accessToken) => {
 
-    const products = await ProductService.getAllProducts(accessToken);
+    const CACHE_DURATION = 300; // 5 minutes cache
+    const cacheKey = redisCache.generateKey('sellerService', accessToken);
 
+    const cachedResult = await redisCache.get(cacheKey);
+    if (cachedResult) {
+        console.log('✅ Seller data served from cache');
+        return cachedResult;
+    }
+
+    const products = await ProductService.getAllProducts(accessToken);
     const productIds = products?.map(product => product._id);
     const orders = await orderService.getOrderBySellerId(productIds, accessToken)
 
@@ -18,21 +27,38 @@ const sellerService = async (accessToken) => {
     const productCount = products?.length || 0;
     const totalRevenue = payments?.reduce((acc, payment) => acc + payment.price.amount, 0) || 0;
 
-    return { productIds, orders, products, orderCount, productCount, payments, totalRevenue, totalSales };
+    const result = {
+        productIds,
+        orders,
+        products,
+        orderCount,
+        productCount,
+        payments,
+        totalRevenue,
+        totalSales,
+        cachedAt: new Date().toISOString()
+    };
+
+    // Store in cache
+    await redisCache.set(cacheKey, result, CACHE_DURATION);
+    console.log('✅ Fresh seller data cached');
+
+    return result;
+
 
 }
 
 export const sellerOverview = catchAsync(async (req, res, next) => {
     const { accessToken } = req.cookies;
 
-    const sellerData = await sellerService(accessToken);
+    const sellerData = await sellerService(accessToken);    
 
     sendResponse(res, 200, "success", {
         sellerData: {
             orderCount: sellerData.orderCount,
             productCount: sellerData.productCount,
             totalRevenue: sellerData.totalRevenue,
-            totalSales: sellerData.totalSales 
+            totalSales: sellerData.totalSales
         }
     })
 
