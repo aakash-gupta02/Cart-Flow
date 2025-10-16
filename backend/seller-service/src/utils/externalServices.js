@@ -34,3 +34,19 @@ export const orderService = {
 
 };
 
+export const paymentService = {
+    async getPaymentData(orderIds, accessToken) {
+        const data = await axios.post(
+            `${config.paymentServiceURL}/api/payment/seller/me`,
+            {orderIds},
+            {
+                headers: {
+                    Cookie: `accessToken=${accessToken}`,
+                },
+                withCredentials: true,
+            }
+        );
+        return data?.data?.payments || null;
+    },
+
+};

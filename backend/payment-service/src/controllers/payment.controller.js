@@ -121,3 +121,23 @@ export const getPaymentById = catchAsync(async (req, res, next) => {
     }
     sendResponse(res, 200, "Payment fetched successfully", { payment });
 });
+
+export const getPaymentBySellers = catchAsync(async (req, res, next) => {
+
+    const { orderIds } = req.body;
+
+    if (!orderIds || orderIds.length === 0) {
+        return next(new AppError("orderIds is required", 400));
+    }
+
+    const payments = await Payment.find({ order: { $in: orderIds } })
+    
+    if (!payments) {
+        return next(new AppError("No payments found", 404));
+    }
+    if (payments.length === 0) {
+        return next(new AppError("Payments is Empty", 404));
+    }
+    sendResponse(res, 200, "Payments fetched successfully", { payments });
+
+});
