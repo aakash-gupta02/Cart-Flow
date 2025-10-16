@@ -130,7 +130,7 @@ export const cancelOrder = catchAsync(async (req, res, next) => {
 export const updatePaymentStatus = catchAsync(async (req, res, next) => {
     const { orderId } = req.params;
     const { status } = req.body;
-        
+
     // find order by id
     const order = await Order.findById(orderId);
     if (!order) return next(new AppError("Order not found", 404));
@@ -143,7 +143,7 @@ export const updatePaymentStatus = catchAsync(async (req, res, next) => {
 
 export const updateStatus = catchAsync(async (req, res, next) => {
     const { orderId } = req.params;
-    const { status } = req.body;    
+    const { status } = req.body;
 
     // find order by id
     const order = await Order.findById(orderId);
@@ -155,4 +155,16 @@ export const updateStatus = catchAsync(async (req, res, next) => {
     sendResponse(res, 200, "Order status updated successfully", { order });
 });
 
+export const allSellerOrders = catchAsync(async (req, res, next) => {
+    const { productIds } = req.body;
+    if (!productIds || productIds.length === 0)
+        return next(new AppError("Product Ids are required", 400));
+
+    const orders = await Order.find({ "items.product": { $in: productIds } });
+    
+    if (!orders) return next(new AppError("No orders found", 404));
+    if (orders.length === 0) return next(new AppError("No orders found for this seller", 404));
+
+    sendResponse(res, 200, "Seller orders fetched successfully", { orders });
+})
 

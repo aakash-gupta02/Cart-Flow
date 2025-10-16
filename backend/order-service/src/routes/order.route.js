@@ -1,14 +1,17 @@
 import express from "express";
-import { cancelOrder, createOrder, getOrderById, getOrders, updateAddress, updatePaymentStatus, updateStatus } from "../controllers/order.controller.js";
-import { protect } from "../middleware/auth.middleware.js";
+import { allSellerOrders, cancelOrder, createOrder, getOrderById, getOrders, updateAddress, updatePaymentStatus, updateStatus } from "../controllers/order.controller.js";
+import { accessTo, protect } from "../middleware/auth.middleware.js";
 import validate, { validateParams } from "../middleware/validate.js";
 import { addressUpdateValidator, addressValidator, statusUpdateValidator } from "../validators/addressValidator.js";
 import { getByIdSchema } from "../validators/order.validator.js";
 const router = express.Router();
 
 router.use(protect)
+
 router.get("/me/", getOrders) 
-router.get("/me/:orderId", validateParams(getByIdSchema), getOrderById) 
+router.get("/me/:orderId", validateParams(getByIdSchema), getOrderById)
+
+router.post("/seller/me", accessTo("seller"), allSellerOrders)
 
 router.post("/create", validate(addressValidator), createOrder)
 

@@ -2,9 +2,9 @@ import axios from "axios";
 import { config } from "../config/config.js";
 
 export const ProductService = {
-    async getProductById(productId, accessToken) {
+    async getAllProducts(accessToken) {
         const data = await axios.get(
-            `${config.productServiceURL}/api/product/${productId}`,
+            `${config.productServiceURL}/api/product/seller/me`,
             {
                 headers: {
                     Cookie: `accessToken=${accessToken}`,
@@ -12,42 +12,16 @@ export const ProductService = {
                 withCredentials: true,
             }
         );
-        return data?.data?.product || null;
+        return data?.data?.products || null;
     },
-    async decreaseStock(productId, accessToken, quantity) {
-        const data = await axios.post(
-            `${config.productServiceURL}/api/product/decrease-stock`, {
-            quantity, productId
-        },
-            {
-                headers: {
-                    Cookie: `accessToken=${accessToken}`,
-                },
-                withCredentials: true,
-            }
-        );
-        return data?.data?.product || null;
-    },
-    async increaseStock(productId, accessToken, quantity) {
-        const data = await axios.post(
-            `${config.productServiceURL}/api/product/increase-stock`, {
-            quantity, productId
-        },
-            {
-                headers: {
-                    Cookie: `accessToken=${accessToken}`,
-                },
-                withCredentials: true,
-            }
-        );
-        return data?.data?.product || null;
-    },
+
 };
 
-export const CartService = {
-    async getUserById(userId, accessToken) {
-        const data = await axios.get(
-            `${config.cartServiceURL}/api/cart/`,
+export const orderService = {
+    async getOrderBySellerId(productIds, accessToken) {
+        const data = await axios.post(
+            `${config.orderServiceURL}/api/order/seller/me`,
+            { productIds },
             {
                 headers: {
                     Cookie: `accessToken=${accessToken}`,
@@ -55,18 +29,8 @@ export const CartService = {
                 withCredentials: true,
             }
         );
-        return data?.data?.cart || null;
+        return data?.data?.orders || null;
     },
-    async clearCart(accessToken) {
-        const data = await axios.delete(
-            `${config.cartServiceURL}/api/cart/clear`,
-            {
-                headers: {
-                    Cookie: `accessToken=${accessToken}`,
-                },
-                withCredentials: true,
-            }
-        );
-        return data?.data?.cart || null;
-    },
+
 };
+
