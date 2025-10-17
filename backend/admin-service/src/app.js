@@ -4,7 +4,7 @@ import morgan from 'morgan';
 import errorHandler from './middleware/errorHandler.js';
 import cookieParser from 'cookie-parser';
 import { accessTo, protect } from './middleware/auth.middleware.js';
-import sellerRoutes from './routes/seller.routes.js';
+import adminRoutes from './routes/admin.routes.js';
 
 const app = express();
 
@@ -15,14 +15,14 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(protect);
-app.use(accessTo("seller"));
+app.use(accessTo("admin"));
 
 
 // Routes
 app.get("/", (req, res) => {
-  res.send("Hello from Seller Service");
+  res.send("Hello from Admin Service");
 });
-app.use("/api/seller", sellerRoutes);
+app.use("/api/admin", adminRoutes);
 
 
 
