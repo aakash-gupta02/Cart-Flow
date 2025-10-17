@@ -4,7 +4,7 @@ import { config } from "../config/config.js";
 export const ProductService = {
     async getAllProducts(accessToken) {
         const data = await axios.get(
-            `${config.productServiceURL}/api/product/seller/me`,
+            `${config.productServiceURL}/api/product`,
             {
                 headers: {
                     Cookie: `accessToken=${accessToken}`,
@@ -18,10 +18,9 @@ export const ProductService = {
 };
 
 export const orderService = {
-    async getOrderBySellerId(productIds, accessToken) {
-        const data = await axios.post(
-            `${config.orderServiceURL}/api/order/seller/me`,
-            { productIds },
+    async getAllOrders(accessToken) {
+        const data = await axios.get(
+            `${config.orderServiceURL}/api/order/all-orders`,
             {
                 headers: {
                     Cookie: `accessToken=${accessToken}`,
@@ -35,10 +34,9 @@ export const orderService = {
 };
 
 export const paymentService = {
-    async getPaymentData(orderIds, accessToken) {
-        const data = await axios.post(
-            `${config.paymentServiceURL}/api/payment/seller/me`,
-            {orderIds},
+    async getPaymentData( accessToken) {
+        const data = await axios.get(
+            `${config.paymentServiceURL}/api/payment/all-payments`,
             {
                 headers: {
                     Cookie: `accessToken=${accessToken}`,
@@ -47,6 +45,38 @@ export const paymentService = {
             }
         );
         return data?.data?.payments || null;
+    },
+
+};
+
+export const userService = {
+    async getAllUsers(accessToken) {
+        const data = await axios.get(
+            `${config.authServiceURL}/api/auth/users`,
+            {
+                headers: {
+                    Cookie: `accessToken=${accessToken}`,
+                },
+                withCredentials: true,
+            }
+        );
+        return data?.data?.users || null;
+    },
+
+};
+
+export const cartService = {
+    async getAllCarts(accessToken) {
+        const data = await axios.get(
+            `${config.cartServiceURL}/api/cart/all-carts`,
+            {
+                headers: {
+                    Cookie: `accessToken=${accessToken}`,
+                },
+                withCredentials: true,
+            }
+        );
+        return data?.data?.carts || null;
     },
 
 };
