@@ -154,3 +154,8 @@ export const getProfile = catchAsync(async (req, res, next) => {
 
   sendResponse(res, 200, 'User Profile fetched successfully', { user });
 });
+
+export const usersProfile = catchAsync(async (req, res, next) => {
+  const users = await User.find().select('-password -__v -refreshToken');
+  sendResponse(res, 200, 'Users fetched successfully', { users });
+})
