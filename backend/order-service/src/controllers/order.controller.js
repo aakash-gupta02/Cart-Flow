@@ -168,3 +168,8 @@ export const allSellerOrders = catchAsync(async (req, res, next) => {
     sendResponse(res, 200, "Seller orders fetched successfully", { orders });
 })
 
+export const allOrders = catchAsync(async (req, res, next) => {
+    const orders = await Order.find().populate("items.product");
+    if (!orders) return next(new AppError("No orders found", 404));
+    sendResponse(res, 200, "All orders fetched successfully", { orders });
+});

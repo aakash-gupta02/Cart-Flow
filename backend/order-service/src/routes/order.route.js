@@ -1,5 +1,5 @@
 import express from "express";
-import { allSellerOrders, cancelOrder, createOrder, getOrderById, getOrders, updateAddress, updatePaymentStatus, updateStatus } from "../controllers/order.controller.js";
+import { allOrders, allSellerOrders, cancelOrder, createOrder, getOrderById, getOrders, updateAddress, updatePaymentStatus, updateStatus } from "../controllers/order.controller.js";
 import { accessTo, protect } from "../middleware/auth.middleware.js";
 import validate, { validateParams } from "../middleware/validate.js";
 import { addressUpdateValidator, addressValidator, statusUpdateValidator } from "../validators/addressValidator.js";
@@ -10,6 +10,8 @@ router.use(protect)
 
 router.get("/me/", getOrders) 
 router.get("/me/:orderId", validateParams(getByIdSchema), getOrderById)
+
+router.get("/all-orders", accessTo("admin"), allOrders)
 
 router.post("/seller/me", accessTo("seller"), allSellerOrders)
 
