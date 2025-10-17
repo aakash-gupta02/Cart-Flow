@@ -4,7 +4,7 @@ import { config } from "../config/config.js";
 export const ProductService = {
     async getProductById(productId, accessToken) {
         const data = await axios.get(
-            `${config.productServiceURL}/api/product/${productId}`,
+            `${config.mainEntryURL}/api/product/${productId}`,
             {
                 headers: {
                     Cookie: `accessToken=${accessToken}`,
@@ -16,7 +16,7 @@ export const ProductService = {
     },
     async decreaseStock(productId, accessToken, quantity) {
         const data = await axios.post(
-            `${config.productServiceURL}/api/product/decrease-stock`, {
+            `${config.mainEntryURL}/api/product/decrease-stock`, {
             quantity, productId
         },
             {
@@ -30,7 +30,7 @@ export const ProductService = {
     },
     async increaseStock(productId, accessToken, quantity) {
         const data = await axios.post(
-            `${config.productServiceURL}/api/product/increase-stock`, {
+            `${config.mainEntryURL}/api/product/increase-stock`, {
             quantity, productId
         },
             {
@@ -47,7 +47,7 @@ export const ProductService = {
 export const CartService = {
     async getUserById(userId, accessToken) {
         const data = await axios.get(
-            `${config.cartServiceURL}/api/cart/`,
+            `${config.mainEntryURL}/api/cart/`,
             {
                 headers: {
                     Cookie: `accessToken=${accessToken}`,
@@ -59,7 +59,7 @@ export const CartService = {
     },
     async clearCart(accessToken) {
         const data = await axios.delete(
-            `${config.cartServiceURL}/api/cart/clear`,
+            `${config.mainEntryURL}/api/cart/clear`,
             {
                 headers: {
                     Cookie: `accessToken=${accessToken}`,

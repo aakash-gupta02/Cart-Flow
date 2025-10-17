@@ -4,7 +4,7 @@ import { config } from "../config/config.js";
 export const ProductService = {
     async getAllProducts(accessToken) {
         const data = await axios.get(
-            `${config.productServiceURL}/api/product/seller/me`,
+            `${config.mainEntryURL}/api/product/seller/me`,
             {
                 headers: {
                     Cookie: `accessToken=${accessToken}`,
@@ -20,7 +20,7 @@ export const ProductService = {
 export const orderService = {
     async getOrderBySellerId(productIds, accessToken) {
         const data = await axios.post(
-            `${config.orderServiceURL}/api/order/seller/me`,
+            `${config.mainEntryURL}/api/order/seller/me`,
             { productIds },
             {
                 headers: {
@@ -37,7 +37,7 @@ export const orderService = {
 export const paymentService = {
     async getPaymentData(orderIds, accessToken) {
         const data = await axios.post(
-            `${config.paymentServiceURL}/api/payment/seller/me`,
+            `${config.mainEntryURL}/api/payment/seller/me`,
             {orderIds},
             {
                 headers: {

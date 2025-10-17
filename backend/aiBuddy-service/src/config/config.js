@@ -8,6 +8,7 @@ export const config = {
     nodeEnv: process.env.NODE_ENV || "development",
     clientURL : process.env.CLIENT_URL || "http://localhost:5173",
     geminiKey: process.env.GEMINI_API_KEY || "",
-    productUrl: "http://localhost:3001/api/product",
-    cartURL: "http://localhost:3002/api/cart",
+    mainEntryURL: process.env.MAIN_ENTRY_URL || "http://localhost:3000",
+    productUrl: process.env.MAIN_ENTRY_URL ? `${process.env.MAIN_ENTRY_URL}/api/product` : "http://localhost:3000/api/product",
+    cartURL: process.env.MAIN_ENTRY_URL ? `${process.env.MAIN_ENTRY_URL}/api/cart` : "http://localhost:3000/api/cart",
 }   

@@ -12,6 +12,7 @@ export const config = {
     cartServiceURL: process.env.CART_SERVICE_URL || "http://localhost:3002",
     orderServiceURL: process.env.ORDER_SERVICE_URL || "http://localhost:3004",
     paymentServiceURL: process.env.PAYMENT_SERVICE_URL || "http://localhost:3004",
+    mainEntryURL: process.env.MAIN_ENTRY_URL || "http://localhost:3000",
 
     redisPassword: process.env.REDIS_PASSWORD,
     redisHost: process.env.REDIS_HOST,

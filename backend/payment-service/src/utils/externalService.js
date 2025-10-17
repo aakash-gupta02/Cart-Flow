@@ -4,7 +4,7 @@ import { config } from "../config/config.js";
 export const OrderService = {
     async getOrderById(orderId, accessToken) {
         const data = await axios.get(
-            `${config.orderServiceURL}/api/order/me/${orderId}`,
+            `${config.mainEntryURL}/api/order/me/${orderId}`,
             {
                 headers: {
                     Cookie: `accessToken=${accessToken}`,
@@ -16,7 +16,7 @@ export const OrderService = {
     },
     async updateStatus(orderId, status, accessToken) {
         const data = await axios.patch(
-            `${config.orderServiceURL}/api/order/status/${orderId}`,
+            `${config.mainEntryURL}/api/order/status/${orderId}`,
             { status: status },
             {
                 headers: {
@@ -29,7 +29,7 @@ export const OrderService = {
     },
     async updatePaymentStatus(orderId, status, accessToken) {
         const data = await axios.patch(
-            `${config.orderServiceURL}/api/order/payment-status/${orderId}`,
+            `${config.mainEntryURL}/api/order/payment-status/${orderId}`,
             { status: status },
             {
                 headers: {

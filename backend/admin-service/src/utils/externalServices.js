@@ -4,7 +4,7 @@ import { config } from "../config/config.js";
 export const ProductService = {
     async getAllProducts(accessToken) {
         const data = await axios.get(
-            `${config.productServiceURL}/api/product`,
+            `${config.mainEntryURL}/api/product`,
             {
                 headers: {
                     Cookie: `accessToken=${accessToken}`,
@@ -20,7 +20,7 @@ export const ProductService = {
 export const orderService = {
     async getAllOrders(accessToken) {
         const data = await axios.get(
-            `${config.orderServiceURL}/api/order/all-orders`,
+            `${config.mainEntryURL}/api/order/all-orders`,
             {
                 headers: {
                     Cookie: `accessToken=${accessToken}`,
@@ -36,7 +36,7 @@ export const orderService = {
 export const paymentService = {
     async getPaymentData( accessToken) {
         const data = await axios.get(
-            `${config.paymentServiceURL}/api/payment/all-payments`,
+            `${config.mainEntryURL}/api/payment/all-payments`,
             {
                 headers: {
                     Cookie: `accessToken=${accessToken}`,
@@ -52,7 +52,7 @@ export const paymentService = {
 export const userService = {
     async getAllUsers(accessToken) {
         const data = await axios.get(
-            `${config.authServiceURL}/api/auth/users`,
+            `${config.mainEntryURL}/api/auth/users`,
             {
                 headers: {
                     Cookie: `accessToken=${accessToken}`,
@@ -68,7 +68,7 @@ export const userService = {
 export const cartService = {
     async getAllCarts(accessToken) {
         const data = await axios.get(
-            `${config.cartServiceURL}/api/cart/all-carts`,
+            `${config.mainEntryURL}/api/cart/all-carts`,
             {
                 headers: {
                     Cookie: `accessToken=${accessToken}`,
