@@ -1,7 +1,10 @@
 import express from "express";
 import { orverview, products, users, orders, carts, payments } from "../controllers/admin.controller.js";
+import { accessTo } from "../middleware/auth.middleware.js";
 
 const router = express.Router();
+router.use(accessTo("admin"));
+
 
 router.get("/overview", orverview);
 router.get("/products", products);
