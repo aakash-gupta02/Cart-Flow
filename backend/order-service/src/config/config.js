@@ -7,10 +7,7 @@ export const config = {
     port: process.env.PORT || 3003,
     nodeEnv: process.env.NODE_ENV || "development",
 
-    // api urls
-    cartServiceURL: process.env.CART_SERVICE_URL || "http://localhost:3002",
-    productServiceURL: process.env.PRODUCT_SERVICE_URL || "http://localhost:3001"
-    ,
+    // Gateway / main entry URL - services should call downstream via this host
     mainEntryURL: process.env.MAIN_ENTRY_URL || "http://localhost:3000"
 
     

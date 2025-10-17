@@ -7,11 +7,7 @@ export const config = {
     nodeEnv: process.env.NODE_ENV || "development",
 
     // api urls
-    authServiceURL: process.env.AUTH_SERVICE_URL || "http://localhost:3000",
-    productServiceURL: process.env.PRODUCT_SERVICE_URL || "http://localhost:3001",
-    cartServiceURL: process.env.CART_SERVICE_URL || "http://localhost:3002",
-    orderServiceURL: process.env.ORDER_SERVICE_URL || "http://localhost:3004",
-    paymentServiceURL: process.env.PAYMENT_SERVICE_URL || "http://localhost:3004",
+
     // Gateway / main entry URL - services should call downstream via this host
     mainEntryURL: process.env.MAIN_ENTRY_URL || "http://localhost:3000",
 
