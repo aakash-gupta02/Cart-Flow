@@ -141,3 +141,9 @@ export const getPaymentBySellers = catchAsync(async (req, res, next) => {
     sendResponse(res, 200, "Payments fetched successfully", { payments });
 
 });
+
+export const allPayments = catchAsync(async (req, res, next) => {
+    const payments = await Payment.find().populate('order').populate('user');
+    if (!payments) return next(new AppError("No payments found", 404));
+    sendResponse(res, 200, "All payments fetched successfully", { payments });
+});
