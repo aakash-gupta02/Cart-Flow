@@ -116,3 +116,8 @@ export const clearCart = catchAsync(async (req, res, next) => {
 
     sendResponse(res, 200, "Cart cleared successfully", { cart });
 });
+
+export const getAllCarts = catchAsync(async (req, res, next) => {
+    const carts = await Cart.find().populate('user').populate('items.product');
+    sendResponse(res, 200, 'Carts fetched successfully', { carts });
+});
