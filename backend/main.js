@@ -10,21 +10,28 @@ import { startPaymentService } from "./payment-service/server.js";
 import { startProductService } from "./product-service/server.js";
 import { startSellerService } from "./seller-service/server.js";
 
+import http from "http";
+import createSocketServer from "./aiBuddy-service/src/sockets/socket.server.js";
+
+
+
 dotenv.config();
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 
+const mainServer = http.createServer(app);
+createSocketServer(mainServer);
 
 // Initialize Auth Service (connect DB etc)
 const authApp = await startAuthService();
-const adminApp = await startAdminService();
+const productApp = await startProductService();
 const cartApp = await startCartService();
 const orderApp = await startOrderService();
 const paymentApp = await startPaymentService();
-const productApp = await startProductService();
 const sellerApp = await startSellerService();
+const adminApp = await startAdminService();
 
 // Mount it under /api
 app.use("/api", authApp);
@@ -40,4 +47,4 @@ app.get("/", (req, res) => res.send("API is running..."));
 
 // Start main server
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(` http://localhost:${PORT}`));
+mainServer.listen(PORT, () => console.log(`http://localhost:${PORT}`));

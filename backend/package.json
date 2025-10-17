@@ -2,6 +2,7 @@
   "name": "backend",
   "version": "1.0.0",
   "main": "index.js",
+  "type": "module",
   "directories": {
     "doc": "docs"
   },
@@ -14,6 +15,9 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@langchain/core": "^0.3.78",
+    "@langchain/google-genai": "^0.2.18",
+    "@langchain/langgraph": "^0.4.9",
     "axios": "^1.12.2",
     "bcrypt": "^6.0.0",
     "cloudinary": "^2.7.0",
@@ -27,7 +31,12 @@
     "mongoose": "^8.19.1",
     "morgan": "^1.10.1",
     "multer": "^2.0.2",
+    "razorpay": "^2.9.6",
     "redis": "^5.8.3",
+    "socket.io": "^4.8.1",
     "streamifier": "^0.1.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
   }
 }
