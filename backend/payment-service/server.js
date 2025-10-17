@@ -5,9 +5,8 @@ import connectDB from "./src/config/db.js";
 const PORT = config.port || 3002;
 
 
-
-connectDB();
-
-app.listen(PORT, () => {
-  console.log(`Server is running on port http://localhost:${PORT}`);
-});
+export const startPaymentService = async () => {
+  await connectDB();
+  console.log("✅ Payment Service initialized");
+  return app;
+};

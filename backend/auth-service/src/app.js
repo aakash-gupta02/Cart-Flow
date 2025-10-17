@@ -9,9 +9,7 @@ import { rateLimiter } from './middleware/rateLimit.middleware.js';
 import authRoutes from './routes/auth.routes.js';
 import addressRoute from './routes/address.route.js';
 
-
 const app = express();
-
 
 // Middleware
 app.use(cors());
@@ -20,14 +18,13 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
+app.use('/auth', authRoutes);
+app.use('/address', addressRoute);
 
-// Routes
-app.use('/api/auth', authRoutes);
-app.use('/api/address', addressRoute);
-
-app.get('/',protect, rateLimiter(20), (req, res) => {
+app.get('/auth/me', protect, rateLimiter(20), (req, res) => {
   res.send(req.user);
 });
-app.use(errorHandler)
+
+app.use(errorHandler);
 
 export default app;

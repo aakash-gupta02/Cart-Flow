@@ -48,7 +48,7 @@ app.get("/protect-test",protect, accessTo("user","seller"), (req, res)=>{
   res.send(req.user)
 })
 
-app.use("/api/product",productRoutes)
+app.use("/product",productRoutes)
 
 app.use(errorHandler)
 

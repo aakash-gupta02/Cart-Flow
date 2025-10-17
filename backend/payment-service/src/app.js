@@ -23,7 +23,7 @@ app.get("/", (req, res) => {
   res.send("Hello from Payment Service");
 });
 
-app.use("/api/payment", paymentRoutes);
+app.use("/payment", paymentRoutes);
 
 app.use(errorHandler)
 

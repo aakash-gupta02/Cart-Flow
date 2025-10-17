@@ -22,10 +22,8 @@ app.use(accessTo("admin"));
 app.get("/", (req, res) => {
   res.send("Hello from Admin Service");
 });
-app.use("/api/admin", adminRoutes);
 
-
-
+app.use("/admin", adminRoutes);
 
 
 // Error Handling Middleware

@@ -19,7 +19,8 @@ app.use(cookieParser());
 app.get("/", (req, res) => {
   res.send("Hello from Cart Service");
 });
-app.use("/api/cart", cartRoutes);
+
+app.use("/cart", cartRoutes);
 
 app.use(errorHandler)
 

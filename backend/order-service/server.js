@@ -1,13 +1,8 @@
 import app from "./src/app.js";
-import { config } from "./src/config/config.js";
 import connectDB from "./src/config/db.js";
 
-const PORT = config.port || 3003;
-
-
-
-connectDB();
-
-app.listen(PORT, () => {
-  console.log(`Server is running on port http://localhost:${PORT}`);
-});
+export const startOrderService = async () => {
+  await connectDB();
+  console.log("✅ Order Service initialized");
+  return app;
+};

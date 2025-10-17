@@ -22,7 +22,8 @@ app.use(accessTo("seller"));
 app.get("/", (req, res) => {
   res.send("Hello from Seller Service");
 });
-app.use("/api/seller", sellerRoutes);
+
+app.use("/seller", sellerRoutes);
 
 
 
