@@ -19,7 +19,7 @@ app.use(cookieParser());
 
 
 // Routes
-app.get("/", (req, res) => {
+app.get("/health", (req, res) => {
   res.send("Hello from Product Service");
 });
 

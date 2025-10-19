@@ -18,7 +18,7 @@ app.use(protect);
 
 
 // Routes
-app.get("/", (req, res) => {
+app.get("/health", (req, res) => {
   res.send("Hello from Admin Service");
 });
 
