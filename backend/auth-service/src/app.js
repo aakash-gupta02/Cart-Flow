@@ -18,8 +18,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-app.use('/auth', authRoutes);
-app.use('/address', addressRoute);
+app.use(authRoutes);
+app.use(addressRoute);
 
 app.get('/auth/me', protect, rateLimiter(20), (req, res) => {
   res.send(req.user);

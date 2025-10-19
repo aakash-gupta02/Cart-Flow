@@ -23,7 +23,7 @@ app.get("/", (req, res) => {
   res.send("Hello from Seller Service");
 });
 
-app.use("/seller", sellerRoutes);
+app.use(sellerRoutes);
 
 
 

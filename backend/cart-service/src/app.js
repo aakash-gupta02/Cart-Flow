@@ -20,7 +20,7 @@ app.get("/", (req, res) => {
   res.send("Hello from Cart Service");
 });
 
-app.use("/cart", cartRoutes);
+app.use(cartRoutes);
 
 app.use(errorHandler)
 

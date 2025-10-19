@@ -19,7 +19,7 @@ app.use(cookieParser());
 app.get("/", (req, res) => {
   res.send("Hello from Order Service");
 });
-app.use("/order", orderRoutes);
+app.use(orderRoutes);
 
 app.use(errorHandler)
 

@@ -46,9 +46,9 @@ app.post("/upload/test-upload", mediaUpload, async (req, res) => {
 
 app.get("/protect-test",protect, accessTo("user","seller"), (req, res)=>{
   res.send(req.user)
-})
+});
 
-app.use("/product",productRoutes)
+app.use(productRoutes)
 
 app.use(errorHandler)
 

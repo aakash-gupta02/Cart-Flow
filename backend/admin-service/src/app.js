@@ -22,7 +22,7 @@ app.get("/", (req, res) => {
   res.send("Hello from Admin Service");
 });
 
-app.use("/admin", adminRoutes);
+app.use(adminRoutes);
 
 
 // Error Handling Middleware
