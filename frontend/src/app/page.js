@@ -4,6 +4,7 @@ import Navbar from "@/components/landingPage/Navbar";
 import PopularCategories from "@/components/landingPage/PopularCategories";
 import LuxurySection from "@/components/landingPage/LuxurySection";
 import NewArrivals from "@/components/landingPage/NewArrivals";
+import Marquee from "@/components/landingPage/Marquee";
 
 export default function Home() {
   return (
@@ -14,6 +15,7 @@ export default function Home() {
     <DailyDeals />
     <LuxurySection />
     <NewArrivals />
+    <Marquee />
   </main>
 
   );
