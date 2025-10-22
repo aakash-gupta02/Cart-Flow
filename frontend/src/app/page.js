@@ -1,3 +1,4 @@
+import DailyDeals from "@/components/landingPage/DailyDeals";
 import Hero from "@/components/landingPage/Hero";
 import Navbar from "@/components/landingPage/Navbar";
 import PopularCategories from "@/components/landingPage/PopularCategories";
@@ -8,7 +9,7 @@ export default function Home() {
     <Navbar/>
     <Hero />
     <PopularCategories />
-    {/* <Hero /> */}
+    <DailyDeals />
   </main>
 
   );
