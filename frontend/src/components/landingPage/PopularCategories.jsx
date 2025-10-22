@@ -1,6 +1,4 @@
-import React from 'react';
-import Image from 'next/image';
-import { ChevronRight } from 'lucide-react';
+import Categories from './common/Categories';
 
 const categories = [
     {
@@ -43,31 +41,7 @@ const categories = [
 
 const PopularCategories = () => {
     return (
-        <section className="mt-10">
-            <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight">Explore Popular Categories</h2>
-            <div className="mt-4 grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-3">
-                {categories.map((category) => (
-                    <a
-                        key={category.name}
-                        href={category.href}
-                        className="group rounded-2xl bg-white p-3 ring-1 ring-neutral-200 shadow-sm hover:shadow-md transition"
-                    >
-                        <div className="aspect-[5/4] relative rounded-xl overflow-hidden">
-                            <Image
-                                src={category.imageSrc}
-                                alt={category.alt}
-                                fill
-                                className="object-cover group-hover:scale-105 transition"
-                            />
-                        </div>
-                        <div className="mt-3 flex items-center justify-between">
-                            <span className="text-sm font-medium">{category.name}</span>
-                            <ChevronRight className="h-4 w-4" />
-                        </div>
-                    </a>
-                ))}
-            </div>
-        </section>
+        <Categories categories={categories} title="Explore Popular Categories" />
     );
 };
 

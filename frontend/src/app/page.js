@@ -3,6 +3,7 @@ import Hero from "@/components/landingPage/Hero";
 import Navbar from "@/components/landingPage/Navbar";
 import PopularCategories from "@/components/landingPage/PopularCategories";
 import LuxurySection from "@/components/landingPage/LuxurySection";
+import NewArrivals from "@/components/landingPage/NewArrivals";
 
 export default function Home() {
   return (
@@ -12,6 +13,7 @@ export default function Home() {
     <PopularCategories />
     <DailyDeals />
     <LuxurySection />
+    <NewArrivals />
   </main>
 
   );
