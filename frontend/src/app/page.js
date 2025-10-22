@@ -2,6 +2,7 @@ import DailyDeals from "@/components/landingPage/DailyDeals";
 import Hero from "@/components/landingPage/Hero";
 import Navbar from "@/components/landingPage/Navbar";
 import PopularCategories from "@/components/landingPage/PopularCategories";
+import LuxurySection from "@/components/landingPage/LuxurySection";
 
 export default function Home() {
   return (
@@ -10,6 +11,7 @@ export default function Home() {
     <Hero />
     <PopularCategories />
     <DailyDeals />
+    <LuxurySection />
   </main>
 
   );
