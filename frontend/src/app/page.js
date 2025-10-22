@@ -6,10 +6,11 @@ import LuxurySection from "@/components/landingPage/LuxurySection";
 import NewArrivals from "@/components/landingPage/NewArrivals";
 import Marquee from "@/components/landingPage/Marquee";
 import NewsletterSection from "@/components/landingPage/NewsLetterSection";
+import Footer from "@/components/landingPage/Footer";
 
 export default function Home() {
   return (
-  <main className="max-w-7xl mx-auto py-24">
+  <main className="max-w-7xl mx-auto pt-24">
     <Navbar/>
     <Hero />
     <PopularCategories />
@@ -17,7 +18,7 @@ export default function Home() {
     <LuxurySection />
     <NewArrivals />
     <Marquee />
-    <NewsletterSection/>
+    <Footer />
   </main>
 
   );

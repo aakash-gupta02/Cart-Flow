@@ -3,15 +3,15 @@ import Image from "next/image";
 
 const NewsletterSection = () => {
     return (
-        <section className="mt-12 overflow-hidden rounded-[2rem] bg-neutral-950 text-white">
+        <section className="overflow-hidden rounded-[4rem] bg-neutral-950 text-white">
             <div className="relative">
                 {/* Background Image */}
-                <div className="absolute inset-0">
+                <div className="absolute inset-0 bg-white ">
                     <Image
-                        src="https://images.unsplash.com/photo-1559697242-a465f2578a95?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=687"
+                    src="https://images.unsplash.com/photo-1759563874662-0cd5fb77f469?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1170"
                         alt="Editorial fashion"
                         fill
-                        className="object-cover opacity-70"
+                        className="object-cover opacity-90"
                     />
                 </div>
 
