@@ -44,18 +44,11 @@ export default function LoginPage() {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-violet-50 via-purple-50 to-indigo-100 p-4">
-            <div className="fixed top-0 w-full h-screen -z-10">
-                <iframe
-                    src="https://my.spline.design/twistcopy-05364b3d8d6a5c8259c878f03fc043c3/"
-                    frameBorder="0"
-                    width="100%"
-                    height="100%"
-                ></iframe>
-            </div>
-
+        <main className="flex min-h-screen w-full items-center justify-center bg-gray-100 p-4">
             <div className="w-full max-w-5xl overflow-hidden flex flex-col lg:flex-row bg-white/80 border-white/20 border rounded-3xl shadow-[0px_0px_0px_1px_rgba(0,0,0,0.06),0px_1px_1px_-0.5px_rgba(0,0,0,0.06),0px_3px_3px_-1.5px_rgba(0,0,0,0.06),_0px_6px_6px_-3px_rgba(0,0,0,0.06),0px_12px_12px_-6px_rgba(0,0,0,0.06),0px_24px_24px_-12px_rgba(0,0,0,0.06)] backdrop-blur-xl">
-                {/* Left / Form */}
+                {/* Left / Image */}
+                <AuthImage />
+                {/* Right / Form */}
                 <div className="w-full lg:w-1/2 p-8 sm:p-12">
                     <div className="inline-flex items-center px-3 py-1 rounded-xl border border-violet-200 bg-violet-50 text-violet-700 text-sm font-medium mb-12">
                         <Box className="w-4 h-4 mr-2" />
@@ -133,14 +126,9 @@ export default function LoginPage() {
                                 Register
                             </Link>
                         </span>
-                
                     </div>
                 </div>
-
-                {/* Right / Image */}
-                <AuthImage />
-
             </div>
-        </div>
+        </main>
     );
 }
