@@ -6,11 +6,14 @@ import { loginSchema, validate } from '@/lib/validators/authValidator';
 import { ArrowRight, Box, Github, Chrome, X } from 'lucide-react';
 import Link from 'next/link';
 import AuthImage from '@/components/__pageCommons/AuthImage';
+import { useAuthStore } from '@/store/authStore';
 
 export default function LoginPage() {
     const router = useRouter();
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
+    const { setUser, user } = useAuthStore();
+
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -29,7 +32,11 @@ export default function LoginPage() {
         }
 
         try {
-            await api.post('/auth/login', { email, password });
+            const res = await api.post('/auth/login', { email, password });
+            setUser(res.data.user)
+            console.log("user", user);
+            
+
             router.push('/'); // Redirect after login
             router.refresh(); // Refresh to update user state in layout
         } catch (err) {
