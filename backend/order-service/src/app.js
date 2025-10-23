@@ -8,7 +8,7 @@ import orderRoutes from './routes/order.route.js';
 const app = express();
 
 // Middleware
-app.use(cors());
+// app.use(cors()););
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

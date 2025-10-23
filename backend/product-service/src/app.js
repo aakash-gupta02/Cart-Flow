@@ -11,7 +11,7 @@ import productRoutes from "./routes/product.routes.js"
 const app = express();
 
 // Middleware
-app.use(cors());
+// app.use(cors()););
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
