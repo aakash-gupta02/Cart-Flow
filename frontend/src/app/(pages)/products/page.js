@@ -11,11 +11,10 @@ export default async function ProductsPage({ searchParams }) {
   });
 
   const products = res.data.products || [];
-  console.log(products);
 
 
   return (
-    <main className="max-w-7xl mx-auto px-4 py-10">
+    <main className="max-w-7xl mx-auto px-4 py-10 mt-10 ">
       <h1 className="text-3xl font-semibold mb-6">Products</h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {products.map((p) => (
