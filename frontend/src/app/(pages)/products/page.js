@@ -1,12 +1,26 @@
-import SearchBar from '@/components/__pageCommons/SearchBar'
-import React from 'react'
+import ProductsList from '@/components/__pageCommons/ProductsList';
+import api from '@/lib/api';
 
-const page = () => {
+export default async function ProductsPage({ searchParams }) {
+  const query = searchParams?.q || '';
+  const category = searchParams?.category || '';
+
+  // Server-side data fetch
+  const res = await api.get('/product/', {
+    params: { q: query, category },
+  });
+
+  const products = res.data.products || [];
+  console.log(products);
+
+
   return (
-    <div>
-        <SearchBar/>
-    </div>
-  )
+    <main className="max-w-7xl mx-auto px-4 py-10">
+      <h1 className="text-3xl font-semibold mb-6">Products</h1>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        {products.map((p) => (
+          <ProductsList key={p._id} product={p} />
+        ))}
+      </div>    </main>
+  );
 }
-
-export default page
