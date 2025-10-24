@@ -11,7 +11,7 @@ import Footer from "@/components/landingPage/Footer";
 export default function Home() {
   return (
   <main className="max-w-7xl mx-auto pt-24">
-    <Navbar/>
+    {/* <Navbar/> */}
     <Hero />
     <PopularCategories />
     <DailyDeals />

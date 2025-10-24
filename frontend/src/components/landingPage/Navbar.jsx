@@ -4,6 +4,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuthStore } from '@/store/authStore';
 import Link from 'next/link';
+import SearchBar from '../__pageCommons/SearchBar';
 
 const Navbar = () => {
   const { user, clearUser } = useAuthStore();
@@ -100,13 +101,13 @@ const Navbar = () => {
               {/* Action Buttons */}
               <div className="flex items-center gap-2">
                 {/* Search */}
-                <motion.button
+                <motion.div
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className="inline-flex items-center justify-center h-10 w-10 rounded-xl bg-white shadow-sm border border-neutral-200 hover:bg-neutral-50 hover:border-neutral-300 transition-all"
+                  className="inline-flex items-center justify-center h-10 w-fit rounded-xl bg-white shadow-sm border border-neutral-200 hover:bg-neutral-50 hover:border-neutral-300 transition-all"
                 >
-                  <Search className="h-4 w-4 text-neutral-600" />
-                </motion.button>
+                  <SearchBar />
+                </motion.div>
 
                 {/* User State Dependent Buttons */}
                 {user ? (
@@ -174,13 +175,13 @@ const Navbar = () => {
                         Login
                       </motion.div>
                     </Link>
-                    <Link href="/signup">
+                    <Link href="/register">
                       <motion.div
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                         className="hidden sm:inline-flex items-center justify-center px-5 py-2 rounded-xl bg-gradient-to-r from-violet-600 to-purple-600 text-white text-sm font-medium shadow-sm hover:shadow-md transition-all"
                       >
-                        Sign Up
+                        Register
                       </motion.div>
                     </Link>
                   </motion.div>
@@ -222,7 +223,7 @@ const Navbar = () => {
               <motion.nav className="flex flex-col gap-2">
                 {navItems.map((item, index) => (
                   <Link key={item.name} href={item.href}>
-                    <motion.a
+                    <motion.div
                       variants={itemVariants}
                       initial="closed"
                       animate="open"
@@ -233,7 +234,7 @@ const Navbar = () => {
                         }`}
                     >
                       {item.name}
-                    </motion.a>
+                    </motion.div>
                   </Link>
                 ))}
               </motion.nav>
