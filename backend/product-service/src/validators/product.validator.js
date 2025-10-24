@@ -30,6 +30,11 @@ export const productSchema = Joi.object({
     stock: Joi.number().min(0).default(0).messages({
         "number.base": "Stock must be a number.",
         "number.min": "Stock cannot be negative."
+    }),
+    category: Joi.array().items(Joi.string()).required().messages({
+        "array.base": "Category must be an array.",
+        "string.base": "Category items must be strings.",
+        "any.required": "Category is required."
     })
 });
 
@@ -58,6 +63,10 @@ export const productUpdateSchema = Joi.object({
     stock: Joi.number().min(0).messages({
         "number.base": "Stock must be a number.",
         "number.min": "Stock cannot be negative."
+    }),
+    category: Joi.array().items(Joi.string()).messages({
+        "array.base": "Category must be an array.",
+        "string.base": "Category items must be strings."
     })
 });
 

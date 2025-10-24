@@ -26,6 +26,7 @@ const productSchema = new mongoose.Schema({
             default: "INR"
         }
     },
+    category: [String],
     stock: {
         type: Number,
         required: true,
