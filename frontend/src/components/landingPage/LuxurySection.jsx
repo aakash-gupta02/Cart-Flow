@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
 import { Globe2, ChevronRight, Check } from 'lucide-react';
+import Link from 'next/link';
 
 const categoryData = {
     electronics: {
@@ -120,11 +121,11 @@ const LuxurySection = () => {
                                 Discover the finest selection of {currentCategory.name.toLowerCase()} products
                             </p>
                         </div>
-                        
-                        <button className="mt-6 inline-flex items-center gap-2 rounded-full bg-black text-white px-6 py-3 text-sm font-medium transition-all hover:scale-105 hover:shadow-lg">
+
+                        <Link href={`/products?category=${currentCategory.name}`} className="mt-6 inline-flex items-center gap-2 rounded-full bg-black text-white px-6 py-3 text-sm font-medium transition-all hover:scale-105 hover:shadow-lg">
                             Shop {currentCategory.name}
                             <ChevronRight className="h-4 w-4" />
-                        </button>
+                        </Link>
                     </div>
 
                     {/* Interactive Gallery */}
