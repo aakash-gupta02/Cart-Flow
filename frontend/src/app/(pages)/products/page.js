@@ -1,13 +1,15 @@
 import ProductsList from '@/components/__pageCommons/ProductsList';
 import api from '@/lib/api';
 
-export default async function ProductsPage({ searchParams }) {
-  const query = searchParams?.q || '';
-  const category = searchParams?.category || '';
+export default async function ProductsPage({searchParams }) {
+  const q = searchParams.q || '';
+  const category = searchParams.category || '';
+
+  console.log(`query: ${q}, category: ${category}`);
 
   // Server-side data fetch
   const res = await api.get('/product/', {
-    params: { q: query, category },
+    params: { q, category },
   });
 
   const products = res.data.products || [];

@@ -3,6 +3,7 @@ import React from 'react';
 import Image from 'next/image';
 import { ChevronRight } from 'lucide-react';
 import { motion } from 'framer-motion';
+import Link from 'next/link';
 
 const Categories = ({ categories, title }) => {
     const containerVariants = {
@@ -39,27 +40,29 @@ const Categories = ({ categories, title }) => {
                 viewport={{ once: true, amount: 0.2 }}
             >
                 {categories.map((category) => (
-                    <motion.a
-                        key={category.name}
-                        href={category.href}
-                        variants={itemVariants}
-                        whileHover={{ scale: 1.03, y: -5, boxShadow: "0px 10px 15px -3px rgba(0, 0, 0, 0.1), 0px 4px 6px -2px rgba(0, 0, 0, 0.05)" }}
-                        transition={{ type: 'spring', stiffness: 300 }}
-                        className="group rounded-2xl bg-white p-3 ring-1 ring-neutral-200 shadow-sm"
-                    >
-                        <div className="aspect-[5/4] relative rounded-xl overflow-hidden">
-                            <Image
-                                src={category.imageSrc}
-                                alt={category.alt}
-                                fill
-                                className="object-cover group-hover:scale-105 transition"
-                            />
-                        </div>
-                        <div className="mt-3 flex items-center justify-between">
-                            <span className="text-sm font-medium">{category.name}</span>
-                            <ChevronRight className="h-4 w-4" />
-                        </div>
-                    </motion.a>
+              
+                        <motion.div
+                            key={category.name}
+                            href={category.href}
+                            variants={itemVariants}
+                            whileHover={{ scale: 1.03, y: -5, boxShadow: "0px 10px 15px -3px rgba(0, 0, 0, 0.1), 0px 4px 6px -2px rgba(0, 0, 0, 0.05)" }}
+                            transition={{ type: 'spring', stiffness: 300 }}
+                            className="group rounded-2xl bg-white p-3 ring-1 ring-neutral-200 shadow-sm"
+                        >      <Link href={`/products?category=${category.name}`} >
+                            <div className="aspect-[5/4] relative rounded-xl overflow-hidden">
+                                <Image
+                                    src={category.imageSrc}
+                                    alt={category.alt}
+                                    fill
+                                    className="object-cover group-hover:scale-105 transition"
+                                />
+                            </div>
+                            <div className="mt-3 flex items-center justify-between">
+                                <span className="text-sm font-medium">{category.name}</span>
+                                <ChevronRight className="h-4 w-4" />
+                            </div>    </Link>
+                        </motion.div>
+                
                 ))}
             </motion.div>
         </motion.section>
