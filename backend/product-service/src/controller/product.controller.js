@@ -7,7 +7,7 @@ import { sendResponse } from "../utils/response.js"
 export const addProduct = catchAsync(async (req, res, next) => {
 
     const seller = req.user.userid
-    const { name, description, stock, priceAmount, priceCurrency = "INR" } = req.body
+    const { name, description, stock, priceAmount, priceCurrency = "INR", category } = req.body
 
     if (!seller) {
         return next(new AppError("Seller Is Required", 400))
@@ -33,7 +33,8 @@ export const addProduct = catchAsync(async (req, res, next) => {
         stock,
         price,
         seller,
-        image: imageurl
+        image: imageurl,
+        category
     })
 
     sendResponse(res, 201, "Product Created Successfully,", {
@@ -43,25 +44,28 @@ export const addProduct = catchAsync(async (req, res, next) => {
 })
 
 // Get all products
-export const getAllProducts = catchAsync(async (req, res, next) => {
+export const getAllProducts = catchAsync(async (req, res, _next) => {
+  const { q, category } = req.query;
 
-    const { q } = req.query;
+  const filter = {};
 
-    // If query param exists, use regex search
-    const filter = q
-        ? {
-            $or: [
-                { name: { $regex: q, $options: "i" } },
-                { description: { $regex: q, $options: "i" } },
-                { brand: { $regex: q, $options: "i" } },
-                { category: { $regex: q, $options: "i" } },
-            ],
-        }
-        : {};
+  
+  if (q?.trim()) {
+    filter.$or = [
+      { name: { $regex: q, $options: "i" } },
+      { description: { $regex: q, $options: "i" } },
+      { brand: { $regex: q, $options: "i" } },
+    ];
+  }
 
-    const products = await Product.find(filter);
-    sendResponse(res, 200, "Products fetched successfully", { products });
+  if (category?.trim()) {
+    filter.category = { $regex: category, $options: "i" };
+  }
+
+  const products = await Product.find(filter);
+  sendResponse(res, 200, "Products fetched successfully", { products });
 });
+
 
 // Get product by ID
 export const getProductById = catchAsync(async (req, res, next) => {
