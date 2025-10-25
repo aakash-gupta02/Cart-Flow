@@ -7,7 +7,7 @@ import Link from 'next/link';
 import SearchBar from '../__pageCommons/SearchBar';
 
 const Navbar = () => {
-  const { user, clearUser } = useAuthStore();
+  const { user, clearUser, logout } = useAuthStore();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const profileModalRef = useRef(null);
@@ -51,7 +51,7 @@ const Navbar = () => {
   };
 
   const handleLogout = () => {
-    clearUser();
+    logout();
     setIsProfileModalOpen(false);
   };
 

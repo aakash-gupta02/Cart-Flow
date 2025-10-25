@@ -138,6 +138,11 @@ export const logout = catchAsync(async (req, res, next) => {
       secure: config.nodeEnv === 'production',
       sameSite: 'strict',
     });
+    res.clearCookie('accessToken', {
+      httpOnly: true,
+      secure: config.nodeEnv === 'production',
+      sameSite: 'strict',
+    });
 
     res.status(200).json({
       success: true,
