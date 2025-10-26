@@ -1,35 +1,54 @@
 import axios from "axios";
 
-const BASE_URL = "http://localhost:3000/api";
+const BASE_URL = 
+  process.env.NODE_ENV === "production"
+    ? "https://your-production-api.com/api"
+    : "http://localhost:3000/api";
 
-// Create an Axios instance
 const api = axios.create({
   baseURL: BASE_URL,
   withCredentials: true,
-  headers: {
-    "Content-Type": "application/json",
-  },
+  headers: { "Content-Type": "application/json" },
 });
 
-// Optional: Interceptor for request
-api.interceptors.request.use(
-  (config) => {
-    // You can modify the config before sending request
-    // For example, if you want to add a custom header
-    // config.headers["X-Custom-Header"] = "value";
-    return config;
-  },
-  (error) => Promise.reject(error)
-);
+let isRefreshing = false;
+let failedQueue = [];
 
-// Optional: Interceptor for response
+const processQueue = (error = null) => {
+  failedQueue.forEach((prom) => (error ? prom.reject(error) : prom.resolve()));
+  failedQueue = [];
+};
+
 api.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    // Handle errors globally
-    if (error.response && error.response.status === 401) {
-      console.log("Unauthorized! Redirect to login or handle refresh");
+  (res) => res,
+  async (error) => {
+    const originalRequest = error.config;
+
+    if (error.response?.status === 401 && !originalRequest._retry) {
+      if (isRefreshing) {
+        return new Promise((resolve, reject) => {
+          failedQueue.push({ resolve, reject });
+        }).then(() => api(originalRequest));
+      }
+
+      originalRequest._retry = true;
+      isRefreshing = true;
+
+      try {
+        // ✅ use same instance here
+        await api.get("/auth/refresh");
+
+        processQueue(null);
+        return api(originalRequest);
+      } catch (err) {
+        processQueue(err);
+        console.error("Refresh token failed:", err.message);
+        return Promise.reject(err);
+      } finally {
+        isRefreshing = false;
+      }
     }
+
     return Promise.reject(error);
   }
 );

@@ -2,6 +2,7 @@
 import Image from "next/image";
 import { ShoppingCart, Eye } from "lucide-react";
 import { useRouter } from "next/navigation";
+import AddtoCart from "./AddtoCart";
 
 const ProductCard = ({ product }) => {
   const router = useRouter();
@@ -23,7 +24,7 @@ const ProductCard = ({ product }) => {
       {/* Product Image */}
       <div
         onClick={() => router.push(`/products/${_id}`)}
-      className="relative w-full h-48 bg-gray-100 rounded-t-2xl overflow-hidden">
+        className="relative w-full h-48 bg-gray-100 rounded-t-2xl overflow-hidden">
         <Image
           src={image}
           alt={name}
@@ -54,7 +55,7 @@ const ProductCard = ({ product }) => {
             </p>
           </div>
 
-          <div className="flex gap-2">
+          {/* <div className="flex gap-2">
 
             <button
               onClick={() => alert("Added to cart!")}
@@ -62,7 +63,11 @@ const ProductCard = ({ product }) => {
             >
               <ShoppingCart className="w-4 h-4" />
             </button>
-          </div>
+          </div> */}
+
+          <AddtoCart itemId={_id} short={true} />
+
+
         </div>
       </div>
     </div>

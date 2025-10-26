@@ -41,23 +41,45 @@ export const getCart = catchAsync(async (req, res, next) => {
 
     const cart = await Cart.findOne({ user: userId })
 
-
     if (!cart) {
-        return sendResponse(res, 200, "Cart is empty", { items: [] });
+        return sendResponse(res, 200, "Cart Not Found", { cart: null });
+    }
+
+    if (cart.items.length === 0) {
+        return sendResponse(res, 200, "Cart is empty", { cart: null });
     }
 
     const products = await Promise.all(cart.items.map(async (item) => {
         return await productService.getProductDetails(item.product)
     }));
 
-    
-
     const cartItems = cart.items.map((item, index) => ({
+        _id: item._id,
         product: products[index],
-        quantity: item.quantity
+        quantity: item.quantity,
+        price: {
+            amount: products[index].price.amount * item.quantity,
+            currency: products[index].price.currency
+        }
     }));
 
-    sendResponse(res, 200, "Cart retrieved successfully", { cartItems });
+    const exchangeRates = { USD: 83, EUR: 90, INR: 1 }; // 1 USD = 83 INR, 1 EUR = 90 INR
+
+    let totalInINR = cartItems.reduce((acc, item) => {
+        const rate = exchangeRates[item.product.price.currency];
+        return acc + item.product.price.amount * rate * item.quantity;
+    }, 0);
+
+
+
+    sendResponse(res, 200, "Cart retrieved successfully", {
+        cart: {
+            _id: cart._id,
+            items: cartItems,
+            totalAmount: { amount: totalInINR, currency: 'INR' }
+
+        }
+    });
 })
 
 export const updateCartItem = catchAsync(async (req, res, next) => {
@@ -131,6 +153,6 @@ export const clearCart = catchAsync(async (req, res, next) => {
 });
 
 export const getAllCarts = catchAsync(async (req, res, next) => {
-    const carts = await Cart.find().populate('user').populate('items.product');
+    const carts = await Cart.find()
     sendResponse(res, 200, 'Carts fetched successfully', { carts });
 });

@@ -5,12 +5,16 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useAuthStore } from '@/store/authStore';
 import Link from 'next/link';
 import SearchBar from '../__pageCommons/SearchBar';
+import { useCartStore } from '@/store/cartStore';
 
 const Navbar = () => {
   const { user, clearUser, logout } = useAuthStore();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const profileModalRef = useRef(null);
+  const { cart } = useCartStore();
+
+  const cartLength = cart?.items?.length || 0;
 
   // Close profile modal on outside click
   useEffect(() => {
@@ -121,7 +125,7 @@ const Navbar = () => {
                       >
                         <ShoppingCart className="h-4 w-4 text-neutral-600" />
                         <span className="absolute -top-1 -right-1 h-4 w-4 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
-                          3
+                          {cartLength}
                         </span>
                       </motion.button>
                     </Link>
