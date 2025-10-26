@@ -1,6 +1,7 @@
 import Cart from "../models/cart.model.js";
 import AppError from "../utils/AppError.js";
 import catchAsync from "../utils/catchAsync.js";
+import { productService } from "../utils/externalService.js";
 import { sendResponse } from "../utils/response.js";
 
 export const addToCart = catchAsync(async (req, res, next) => {
@@ -38,13 +39,25 @@ export const getCart = catchAsync(async (req, res, next) => {
         return next(new AppError("User id Required", 401));
     }
 
-    const cart = await Cart.findOne({ user: userId }).populate('items.product');
+    const cart = await Cart.findOne({ user: userId })
+
 
     if (!cart) {
         return sendResponse(res, 200, "Cart is empty", { items: [] });
     }
 
-    sendResponse(res, 200, "Cart retrieved successfully", { cart });
+    const products = await Promise.all(cart.items.map(async (item) => {
+        return await productService.getProductDetails(item.product)
+    }));
+
+    
+
+    const cartItems = cart.items.map((item, index) => ({
+        product: products[index],
+        quantity: item.quantity
+    }));
+
+    sendResponse(res, 200, "Cart retrieved successfully", { cartItems });
 })
 
 export const updateCartItem = catchAsync(async (req, res, next) => {
