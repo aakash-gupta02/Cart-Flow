@@ -91,7 +91,7 @@ export const getOrderById = catchAsync(async (req, res, next) => {
     const userId = req.user.userid;
     const { orderId } = req.params;
 
-    const order = await Order.findOne({ _id: orderId, user: userId }).populate("items.product");
+    const order = await Order.findOne({ _id: orderId, user: userId })
     if (!order) return next(new AppError("Order not found", 404));
 
     sendResponse(res, 200, "Order fetched successfully", { order });

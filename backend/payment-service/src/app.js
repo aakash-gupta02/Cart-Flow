@@ -10,7 +10,7 @@ import { config } from './config/config.js';
 const app = express();
 
 // Middleware
-app.use(cors({ origin: config?.clientURL, credentials: true }));
+// app.use(cors({ origin: config?.clientURL, credentials: true }));
 
 app.use(morgan('dev'));
 app.use(express.json());
