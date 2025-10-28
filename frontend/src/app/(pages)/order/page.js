@@ -5,6 +5,8 @@ import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Loader2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import CheckoutButton from "@/components/__pageCommons/Payment";
 
 export default function OrdersPage() {
   const [orders, setOrders] = useState([]);
@@ -86,6 +88,10 @@ export default function OrdersPage() {
                   <p className="text-sm text-gray-500">
                     Payment: {order.paymentStatus || "pending"}
                   </p>
+
+                  {/* buy now button */}
+                  {/* <Button onClick={() => handleBuyNow(order)}>Buy Now</Button> */}
+                  {order.paymentStatus !== "paid" && <CheckoutButton orderId={order._id} />}
                 </div>
 
                 <Separator />

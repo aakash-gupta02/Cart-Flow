@@ -154,7 +154,7 @@ const Navbar = () => {
                               <UserCircle className="h-4 w-4" /> Profile
                             </Link>
 
-                            <Link href="/orders" onClick={() => setIsProfileModalOpen(false)} className="flex items-center gap-3 px-3 py-2 text-sm text-neutral-600 hover:bg-neutral-100 hover:text-neutral-800 rounded-md transition-colors">
+                            <Link href="/order" onClick={() => setIsProfileModalOpen(false)} className="flex items-center gap-3 px-3 py-2 text-sm text-neutral-600 hover:bg-neutral-100 hover:text-neutral-800 rounded-md transition-colors">
                               <Package className="h-4 w-4" /> Orders
                             </Link>
 

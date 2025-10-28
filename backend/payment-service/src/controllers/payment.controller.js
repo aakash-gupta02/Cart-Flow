@@ -24,6 +24,25 @@ export const createPayment = catchAsync(async (req, res, next) => {
         return sendResponse(res, 400, "Order is already completed");
     }
 
+    // Check if payment already exists for this order
+    const existingPayment = await Payment.findOne({ order: orderId });
+    
+
+    // If payment already completed or still pending → don't recreate
+    if (existingPayment) {
+        if (existingPayment.status === "completed") {
+            return sendResponse(res, 400, "Payment already completed for this order", { payment: existingPayment });
+        }
+
+        if (existingPayment.status === "pending") {
+            return sendResponse(res, 200, "Payment already initiated", { payment: existingPayment });
+        }
+    }
+
+
+
+
+
     const options = {
         amount: order.totalPrice.amount * 100,
         currency: order.totalPrice.currency,
@@ -131,7 +150,7 @@ export const getPaymentBySellers = catchAsync(async (req, res, next) => {
     }
 
     const payments = await Payment.find({ order: { $in: orderIds } })
-    
+
     if (!payments) {
         return next(new AppError("No payments found", 404));
     }
