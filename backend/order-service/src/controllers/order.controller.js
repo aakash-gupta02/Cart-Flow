@@ -9,74 +9,81 @@ export const createOrder = catchAsync(async (req, res, next) => {
     const accessToken = req.cookies.accessToken;
     const { street, city, state, zip, country } = req.body;
 
-    const address = { street, city, state, zip, country };
+    if (!userId) return next(new AppError("User ID missing", 401));
 
-    // 1️⃣ Get cart
-    const cart = await CartService.getUserById(userId, accessToken);
-    if (!cart) return sendResponse(res, 404, "Cart not Found");
-    if (cart.items.length === 0) return sendResponse(res, 400, "Cart is empty");
+    // fetch user cart
+    const cart = await CartService.getUserCart(accessToken);
+    if (!cart) return sendResponse(res, 404, "Cart not found");
+    if (!cart.items || cart.items.length === 0)
+        return sendResponse(res, 400, "Cart is empty");
 
-    // Get products
-    const products = await Promise.all(
-        cart.items.map(item => ProductService.getProductById(item.product, accessToken))
-    );
-
-    if (!products) return sendResponse(res, 400, "Products not found");
-
-    // 3️⃣ Build order items
-    const orderItems = [];
-    let totalAmount = 0;
-    let currency = "INR"; // default, or pick from first product
-
+    // validate stock 
     for (const item of cart.items) {
-        const product = products.find(p => p._id === item.product);
-        if (!product) return sendResponse(res, 404, `Product ${item.product} not found`);
+        const product = item.product;
+        if (!product)
+            return sendResponse(res, 404, `Product not found in cart`);
 
         if (product.stock < item.quantity)
-            return sendResponse(res, 400, `Product ${product.name} is out of stock`);
-
-        orderItems.push({
-            product: product._id,
-            quantity: item.quantity,
-            price: {
-                amount: product.price.amount,
-                currency: product.price.currency
-            }
-        });
-
-        totalAmount += product.price.amount * item.quantity;
-        currency = product.price.currency;
+            return sendResponse(
+                res,
+                400,
+                `Product ${product.name} is out of stock`
+            );
     }
 
-    // Build the final order object
     const orderData = {
         user: userId,
-        items: orderItems,
-        totalPrice: {
-            amount: totalAmount,
-            currency
-        },
+        items: cart.items.map(item => ({
+            product: {
+                productId: item.product._id,
+                name: item.product.name,
+                image: item.product.image,
+            },
+            quantity: item.quantity,
+            price: item.price,
+        })),
+        totalPrice: cart.totalAmount,
         status: "pending",
-        shippingAddress: address
+        shippingAddress: { street, city, state, zip, country },
     };
 
+    // 4️⃣ Decrease stock for all ordered products
     await Promise.all(
-        orderItems.map(item =>
-            ProductService.decreaseStock(item.product, accessToken, item.quantity)
+        cart.items.map(item =>
+            ProductService.decreaseStock(
+                item.product._id,
+                accessToken,
+                item.quantity
+            )
         )
     );
 
+    // 5️⃣ Create the order and clear the cart
     const newOrder = await Order.create(orderData);
     if (!newOrder) return next(new AppError("Failed to create order", 500));
+
     await CartService.clearCart(accessToken);
 
-    sendResponse(res, 200, "Order created, Cart Cleared & Stock Decremented successfully", { order: newOrder });
+    // 6️⃣ Send success response
+    sendResponse(res, 200, "Order created successfully, cart cleared, and stock updated.", {
+        order: newOrder,
+    });
 });
 
 export const getOrders = catchAsync(async (req, res, next) => {
     const userId = req.user.userid;
-    const orders = await Order.find({ user: userId }).populate("items.product");
+    const orders = await Order.find({ user: userId })
     if (!orders) return next(new AppError("No orders found", 404));
+
+    const products = await Promise.all(orders.map(async (order) => {
+        return await Promise.all(order.items.map(async (item) => {
+            return await ProductService.getProductById(item.product.productId, req.cookies.accessToken)
+        }));
+    }));
+
+
+
+
     sendResponse(res, 200, "Orders fetched successfully", { orders });
 });
 
@@ -161,7 +168,7 @@ export const allSellerOrders = catchAsync(async (req, res, next) => {
         return next(new AppError("Product Ids are required", 400));
 
     const orders = await Order.find({ "items.product": { $in: productIds } });
-    
+
     if (!orders) return next(new AppError("No orders found", 404));
     if (orders.length === 0) return next(new AppError("No orders found for this seller", 404));
 

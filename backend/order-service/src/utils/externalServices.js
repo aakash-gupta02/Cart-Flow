@@ -45,7 +45,7 @@ export const ProductService = {
 };
 
 export const CartService = {
-    async getUserById(userId, accessToken) {
+    async getUserCart(accessToken) {
         const data = await axios.get(
             `${config.mainEntryURL}/api/cart/`,
             {
