@@ -3,9 +3,13 @@ import { useCartStore } from "@/store/cartStore";
 import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import Link from "next/link";
 
 export default function CartPage() {
-  const { cart, fetchCart, loading, clearCart, updateQuantity, removeItem } = useCartStore();  
+  const { cart, fetchCart, loading, clearCart, updateQuantity, removeItem } = useCartStore(); 
+  
+  console.log("cart: ", cart);
+  
 
   useEffect(() => {
     fetchCart();
@@ -48,13 +52,13 @@ export default function CartPage() {
                   <div>
                     <p className="font-medium text-gray-800">{item.product.name}</p>
                     <p className="text-gray-600">
-                      Price: {item?.price?.amount} {item?.price?.currency}
+                      Price: {item.product.price.amount} {item.product.price.currency}
                     </p>
 
 
 
                     <p className="font-semibold text-gray-900 mt-1">
-                      Total: {item?.price?.amount * item?.quantity} {item?.price?.currency}
+                      Total:  {item?.price?.amount} {item?.price?.currency}
                     </p>
                   </div>
                 </div>
@@ -105,7 +109,9 @@ export default function CartPage() {
             <Button variant="outline" onClick={clearCart}>
               Clear Cart
             </Button>
+            <Link href="/order/create">
             <Button>Checkout</Button>
+            </Link>
           </div>
         </div>
       </div>
