@@ -5,11 +5,12 @@ import LuxurySection from "@/components/landingPage/LuxurySection";
 import NewArrivals from "@/components/landingPage/NewArrivals";
 import Marquee from "@/components/landingPage/Marquee";
 import Footer from "@/components/landingPage/Footer";
+import Navbar from "@/components/landingPage/Navbar";
 
 export default function Home() {
   return (
   <main className="max-w-7xl mx-auto pt-24">
-    {/* <Navbar/> */}
+    <Navbar/>
     <Hero />
     <PopularCategories />
     <DailyDeals />
