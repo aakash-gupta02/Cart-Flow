@@ -125,7 +125,7 @@ export const cancelOrder = catchAsync(async (req, res, next) => {
 
     await Promise.all(
         order.items.map(item =>
-            ProductService.increaseStock(item.product, req.cookies.accessToken, item.quantity)
+            ProductService.increaseStock(item.product.productId, req.cookies.accessToken, item.quantity)
         )
     )
 
