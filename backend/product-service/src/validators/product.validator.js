@@ -24,7 +24,7 @@ export const productSchema = Joi.object({
         "string.base": "Currency must be a string.",
         "any.only": "Currency must be one of USD, EUR, or INR."
     }),
-    media: Joi.any().required().messages({
+    media: Joi.any().messages({
         "any.required": "Product image file (media) is required."
     }),
     stock: Joi.number().min(0).default(0).messages({
