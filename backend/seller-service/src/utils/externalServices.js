@@ -29,6 +29,12 @@ export const orderService = {
                 withCredentials: true,
             }
         );
+
+        if (data.status === 404) return [];
+
+
+
+
         return data?.data?.orders || null;
     },
 
@@ -38,7 +44,7 @@ export const paymentService = {
     async getPaymentData(orderIds, accessToken) {
         const data = await axios.post(
             `${config.mainEntryURL}/api/payment/seller/me`,
-            {orderIds},
+            { orderIds },
             {
                 headers: {
                     Cookie: `accessToken=${accessToken}`,

@@ -167,7 +167,7 @@ export const allSellerOrders = catchAsync(async (req, res, next) => {
     if (!productIds || productIds.length === 0)
         return next(new AppError("Product Ids are required", 400));
 
-    const orders = await Order.find({ "items.product": { $in: productIds } });
+    const orders = await Order.find({ "items.product.productId": { $in: productIds } });
 
     if (!orders) return next(new AppError("No orders found", 404));
     if (orders.length === 0) return next(new AppError("No orders found for this seller", 404));

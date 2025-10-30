@@ -54,7 +54,7 @@ export const sellerOverview = catchAsync(async (req, res, next) => {
     const sellerData = await sellerService(accessToken);    
 
     sendResponse(res, 200, "success", {
-        sellerData: {
+        overview: {
             orderCount: sellerData.orderCount,
             productCount: sellerData.productCount,
             totalRevenue: sellerData.totalRevenue,
