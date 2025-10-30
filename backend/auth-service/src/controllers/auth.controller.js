@@ -11,7 +11,7 @@ export const register = catchAsync(async (req, res, next) => {
   const { name, email, password, role } = req.body;
 
   // Check if user already exists (case-insensitive)
-  const existingUser = await User.findOne({ 
+  const existingUser = await User.findOne({
     email: { $regex: new RegExp(`^${email.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`, 'i') }
   })
   if (existingUser) {
@@ -45,7 +45,7 @@ export const login = catchAsync(async (req, res, next) => {
   const { email, password } = req.body;
 
   // checking if user exist or not (case-insensitive)
-  const userExists = await User.findOne({ 
+  const userExists = await User.findOne({
     email: { $regex: new RegExp(`^${email.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`, 'i') }
   })
   if (!userExists) {
@@ -99,7 +99,7 @@ export const refreshToken = catchAsync(async (req, res, next) => {
     return next(new AppError("Refresh token required", 401));
   }
 
-  jwt.verify(refreshToken, config.jwtSecret , async (err, decoded) => {
+  jwt.verify(refreshToken, config.jwtSecret, async (err, decoded) => {
     if (err) return next(new AppError("Invalid or expired refresh token", 403));
 
 
@@ -108,10 +108,19 @@ export const refreshToken = catchAsync(async (req, res, next) => {
 
     // Issue new access token
     const newAccessToken = generateAccessToken(user);
+    console.log("new token generated:");
+
+    res.cookie('accessToken', newAccessToken, {
+      httpOnly: true,
+      secure: config.nodeEnv === 'production',
+      sameSite: 'strict',
+      maxAge: 60 * 60 * 1000
+    });
+
 
     res.status(200).json({
       success: true,
-      accessToken: newAccessToken,
+      accessToken: true,
     });
   });
 });
@@ -122,7 +131,7 @@ export const logout = catchAsync(async (req, res, next) => {
     return next(new AppError("Refresh token required", 401));
   }
 
-  jwt.verify(refreshToken, config.jwtSecret , async (err, decoded) => {
+  jwt.verify(refreshToken, config.jwtSecret, async (err, decoded) => {
     if (err) return next(new AppError("Invalid or expired refresh token", 403));
 
     const user = await User.findById(decoded.userid);
