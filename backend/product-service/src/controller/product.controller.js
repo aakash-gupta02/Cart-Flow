@@ -1,3 +1,4 @@
+import { json } from "express"
 import { uploadToCloudinary } from "../middleware/multer.middleware.js"
 import { Product } from "../models/product.model.js"
 import AppError from "../utils/AppError.js"
@@ -91,7 +92,7 @@ export const updateProduct = catchAsync(async (req, res, next) => {
         return next(new AppError("You are not authorized to update this product", 403));
     }
 
-    const { name, description, stock, priceAmount, priceCurrency } = req.body;
+    const { name, description, stock, priceAmount, priceCurrency, category } = req.body;
     if (name) product.name = name;
     if (description) product.description = description;
     if (stock) product.stock = stock;
@@ -101,6 +102,8 @@ export const updateProduct = catchAsync(async (req, res, next) => {
     if (priceCurrency) {
         product.price.currency = priceCurrency;
     }
+
+    if (category) product.category = category;
 
     // Handle image update if provided
     if (req.file) {

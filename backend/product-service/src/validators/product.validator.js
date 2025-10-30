@@ -66,7 +66,6 @@ export const productUpdateSchema = Joi.object({
     }),
     category: Joi.array().items(Joi.string()).messages({
         "array.base": "Category must be an array.",
-        "string.base": "Category items must be strings."
     })
 });
 
